@@ -1,0 +1,74 @@
+﻿@using RestoranSiteV2.Models.Siniflar
+@model List<SatisHareket>
+@{
+    ViewBag.Title = "DepartmanPersonelSatis";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<br />
+<h2>Departman Personel Satış</h2>
+<br />
+<h1 class="h3 mb-2 text-gray-800">Personel Adı : @ViewBag.dpers</h1>
+
+
+<!-- DataTables CSS -->
+<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Departman Tablosu</h6>
+    </div>
+    <div class="card-body">
+        
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Satış ID</th>
+                        <th>Ürün</th>
+                        <th>Müşteri</th>
+                        <th>Fiyat</th>
+                        <th>Adet</th>
+                        <th>Toplam</th>
+                        <th>Tarih</th>
+                        <th>Yazdır</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@x.Satisid</td>
+                            <td>@x.Urun.UrunAd</td>
+                            <td>@x.Cariler.CariAd+@x.Cariler.CariSoyad</td>
+                            <td>@x.Fiyat</td>
+                            <td>@x.Adet</td>
+                            <td>@x.ToplamTutar</td>
+                            <td>@x.Tarih</td>
+                            <td><a href="#" class="btn btn-outline-success">Yazdır</a></td>
+                          
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>$('#dataTable').DataTable({
+        "language": {
+            "search": "Ara:",
+            "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
+            "infoEmpty": "Kayıt yok",
+            "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
+            "paginate": {
+                "first": "İlk",
+                "last": "Son",
+                "next": "Sonraki",
+                "previous": "Önceki"
+            }
+        }
+    });</script>

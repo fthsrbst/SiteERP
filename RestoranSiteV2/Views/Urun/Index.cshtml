@@ -1,0 +1,444 @@
+﻿@using RestoranSiteV2.Models.Siniflar;
+@model List<Urun>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<style>
+    /* CSS to fix the popup and prevent shifting */
+    #popupModal {
+        position: fixed;
+        top: 20px; /* Adjust the position if needed */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050; /* Make sure it is on top of other elements */
+    }
+
+    #excelExportButton {
+        position: relative;
+        z-index: 10; /* Ensure the button stays above background elements */
+    }
+</style>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+<h1 class="h3 mb-2 text-gray-800">Ürünler Sayfası</h1>
+
+@if (TempData["AlertMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["AlertMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["excelMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["excelMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Ürünler Tablosu</h6>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <!--<a href="/Urun/YeniUrun/" class="btn btn-primary">Yeni Ürün Ekle</a-->
+            <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#urunEkleModal">Yeni Ürün Ekle</a>
+
+            <!-- Sağ tarafa hizalanan "Yazdır" butonu -->
+            <div>
+                <label for="excelFileInput" class="btn btn-outline-warning">Excel Yükle</label>
+                <input type="file" id="excelFileInput" style="display:none;" />
+
+                <a href="/Urun/ExcelExport" id="excelExportButton" class="btn btn-outline-success mr-2">İndir</a>
+                <a href="javascript:void(0);" id="printButton" class="btn btn-outline-info">Yazdır</a>
+            </div>
+            <div id="popupMessage" style="display: none;" class="alert alert-info"></div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="urunTablo">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)"> ID</th>
+                        <th onclick="sortTable(1)">Ürün</th>
+                        <th onclick="sortTable(2)">Marka</th>
+                        <th onclick="sortTable(3)">Stok</th>
+                        <th onclick="sortTable(4)">Alış Fiyatı</th>
+                        <th onclick="sortTable(5)">Satış Fiyatı</th>
+                        <th onclick="sortTable(6)">Kategori</th>
+                        <th>Görsel</th>
+                        <th>Güncelle</th>
+                        <th>Sil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model)
+                    {
+                        <tr>
+                            <td>@u.Urunid</td>
+                            <td>@u.UrunAd</td>
+                            <td>@u.Marka</td>
+                            <td>@u.Stok</td>
+                            <td>@u.AlisFiyat</td>
+                            <td>@u.SatisFiyat</td>
+                            <td>@u.Kategori.KategoriAd</td>
+                            <td><img src="@u.UrunGorsel" alt="Görsel" width="50" /></td>
+                            <td><a href="/Urun/UrunGetir/@u.Urunid" class="btn btn-outline-primary">Güncelle</a></td>
+                            <td><a href="/Urun/UrunSil/@u.Urunid" class="btn btn-outline-danger">Sil</a></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Başarı veya hata mesajlarını göstermek için basit bir modal -->
+    <div id="popupModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="popupTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="popupMessage">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="urunEkleModal" tabindex="-1" role="dialog" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="urunEkleForm">
+                    <div class="form-group">
+                        <label for="urunAd">Ürün Adı</label>
+                        <input type="text" class="form-control" id="urunAd" name="UrunAd" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="marka">Marka</label>
+                        <input type="text" class="form-control" id="marka" name="Marka" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stok">Stok</label>
+                        <input type="number" class="form-control" id="stok" name="Stok" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alisFiyat">Alış Fiyatı</label>
+                        <input type="number" step="0.01" class="form-control" id="alisFiyat" name="AlisFiyat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="satisFiyat">Satış Fiyatı</label>
+                        <input type="number" step="0.01" class="form-control" id="satisFiyat" name="SatisFiyat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select class="form-control" id="kategori" name="KategoriId" required>
+                            <option value="">Kategori Seçin</option>
+                            @foreach (var kategori in ViewBag.Kategoriler)
+                            {
+                                <option value="@kategori.KategoriID">@kategori.KategoriAd</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="urunGorsel">Ürün Görseli</label>
+                        <input type="text" class="form-control" id="urunGorsel" name="UrunGorsel">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" id="urunEkleSubmit" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $('#urunTablo').DataTable({
+        "language": {
+            "search": "Ara:",
+            "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
+            "infoEmpty": "Kayıt yok",
+            "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
+            "paginate": {
+                "first": "İlk",
+                "last": "Son",
+                "next": "Sonraki",
+                "previous": "Önceki"
+            }
+        }
+    });
+
+
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 3000); // 3000 ms = 3 saniye
+
+</script>
+
+<script>
+
+
+    $(document).ready(function () {
+
+    });
+
+
+
+
+    document.getElementById("excelExportButton").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default behavior (page reload)
+
+        // Request and handle the download
+        fetch(this.href)
+            .then(response => {
+                if (response.ok) {
+                    // If successful, download the file
+                    return response.blob().then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.style.display = "none";
+                        a.href = url;
+                        a.download = "Urunler.xlsx"; // Set the filename
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+
+                        // Show the success message after download
+                        showExcelSuccessMessage(); // Custom function to display success message
+                        setTimeout(function () {
+                            location.reload();  // Reload the page after a short delay
+                        }, 500); // Half a second delay
+                    });
+                } else {
+                    throw new Error("Dosya indirilemedi.");
+                }
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    });
+
+    // Custom function to show success message after download
+    function showExcelSuccessMessage() {
+        // Dynamically insert the success message
+        const messageContainer = document.createElement("div");
+        messageContainer.classList.add("alert", "alert-success");
+        messageContainer.innerHTML = `
+        ${"Excel başarıyla indirildi!"}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    `;
+
+        // Append the message to the body or a specific element where you want to show it
+        document.body.appendChild(messageContainer);
+
+        // Automatically fade out the alert after 3 seconds
+        setTimeout(function () {
+            $(messageContainer).fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+
+
+    document.getElementById("printButton").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent any default link behavior (navigation)
+
+        // Clone the table and remove "Güncelle" and "Sil" columns
+        const table = document.getElementById("urunTablo").cloneNode(true);
+
+        // Remove the last two columns from the table header
+        const header = table.querySelector("thead tr");
+        if (header) {
+            header.removeChild(header.lastElementChild);
+            header.removeChild(header.lastElementChild);
+            header.removeChild(header.lastElementChild);
+        }
+
+        // Remove the last two columns from all rows in the table body
+        const rows = table.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            row.removeChild(row.lastElementChild);
+            row.removeChild(row.lastElementChild);
+            row.removeChild(row.lastElementChild);
+        });
+
+        // Create a print area within the current window
+        const printWindow = window.open('', '', 'width=800,height=600');
+
+        // Inject styles to ensure the table looks good when printed
+        const styles = `
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+        </style>
+    `;
+
+        // Set the content of the print window
+        printWindow.document.write(`
+        <html>
+            <head>
+                <title>Ürünler Tablosu</title>
+                ${styles}
+            </head>
+            <body>
+                <h2>Ürünler Tablosu</h2>
+                ${table.outerHTML}
+            </body>
+        </html>
+    `);
+
+        // Close the document and trigger the print dialog
+        printWindow.document.close();
+        printWindow.print();
+    });
+
+
+
+    document.getElementById("excelFileInput").addEventListener("change", function (event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            var formData = new FormData();
+            formData.append("file", file);
+
+            fetch("/Urun/ExcelImport", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message); // Display success message
+                        location.reload(); // Reload the page
+                    } else {
+                        alert(data.message); // Display error message
+                    }
+                })
+                .catch(error => {
+                    alert("Yükleme işlemi başarısız oldu: " + error.message);
+                });
+        }
+    });
+
+
+
+
+    $('#urunEkleSubmit').on('click', function () {
+        var formData = $('#urunEkleForm').serialize();
+        $.ajax({
+            url: '/Urun/YeniUrun',
+            type: 'POST',
+            data: formData,
+            success: function () {
+                $('#urunEkleModal').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                refreshTable(); // Refresh the table immediately after the new product is added
+                alert('Ürün başarıyla eklendi!');
+            },
+            error: function () {
+                alert('Ürün ekleme işlemi başarısız oldu.');
+            }
+        });
+    });
+
+
+
+    function refreshTable() {
+    $.ajax({
+        url: '/Urun/', // Ensure this URL returns the updated product list
+        type: 'GET',
+        success: function (data) {
+            var tableBody = $('#urunTablo tbody');
+            tableBody.empty(); // Clear the existing table rows
+
+            // Loop through the new data and append each product as a table row
+            data.forEach(function (u) {
+                var newRow = `
+                    <tr>
+                        <td>${u.Urunid}</td>
+                        <td>${u.UrunAd}</td>
+                        <td>${u.Marka}</td>
+                        <td>${u.Stok}</td>
+                        <td>${u.AlisFiyat}</td>
+                        <td>${u.SatisFiyat}</td>
+                        <td>${u.Kategori.KategoriAd}</td>
+                        <td><img src="${u.UrunGorsel}" alt="Görsel" width="50" /></td>
+                        <td><a href="/Urun/UrunGetir/${u.Urunid}" class="btn btn-outline-primary">Güncelle</a></td>
+                        <td><a href="/Urun/UrunSil/${u.Urunid}" class="btn btn-outline-danger">Sil</a></td>
+                    </tr>
+                `;
+                tableBody.append(newRow); // Append the new row to the table
+            });
+        },
+        error: function () {
+            alert('Tablo verisi yüklenemedi.');
+        }
+    });
+}
+
+  
+</script>
+
+
+
+
+</script>

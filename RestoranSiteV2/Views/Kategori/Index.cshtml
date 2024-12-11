@@ -1,0 +1,85 @@
+﻿@using RestoranSiteV2.Models.Siniflar
+@model List<Kategori>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- DataTables CSS -->
+<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<h1 class="h3 mb-2 text-gray-800">Kategori Sayfası</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Kategori Tablosu</h6>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/Kategori/KategoriEkle/" class="btn btn-primary">Yeni Kategori Ekle</a>
+            <a href="/Kategori/ExcelExport" class="btn btn-outline-success">İndir</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kategori Adı</th>
+                        <th>Güncelle</th>
+                        <th>Sil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var k in Model)
+                    {
+                        <tr>
+                            <td>@k.KategoriID</td>
+                            <td>@k.KategoriAd</td>
+                            <td><a href="/Kategori/KategoriGetir/@k.KategoriID" class="btn btn-outline-primary">Güncelle</a></td>
+                            <td><a href="/Kategori/KategoriSil/@k.KategoriID" class="btn btn-outline-danger">Sil</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- DataTables JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $('#dataTable').DataTable({
+        "language": {
+            "search": "Ara:",
+            "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
+            "infoEmpty": "Kayıt yok",
+            "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
+            "paginate": {
+                "first": "İlk",
+                "last": "Son",
+                "next": "Sonraki",
+                "previous": "Önceki"
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/Turkish.json"
+            },
+            "order": [], // Varsayılan sıralama yok
+            "columnDefs": [
+                { "orderable": true, "targets": [0, 1] }, // İlk iki sütun sıralanabilir
+                { "orderable": false, "targets": [2, 3] } // Güncelle ve Sil sıralanamaz
+            ]
+        });
+    });
+</script>

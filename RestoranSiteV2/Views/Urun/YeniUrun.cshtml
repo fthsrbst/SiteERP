@@ -1,0 +1,51 @@
+﻿@model RestoranSiteV2.Models.Siniflar.Urun
+@{
+    ViewBag.Title = "Yeni Ürün";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Yeni Ürün Ekle</h4>
+        </div>
+        <div class="card-body">
+            <form class="form-group" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.UrunAd, null, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(x => x.UrunAd, new { @class = "form-control rounded-pill" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.Marka, null, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(x => x.Marka, new { @class = "form-control rounded-pill" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.Stok, null, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(x => x.Stok, new { @class = "form-control rounded-pill" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.AlisFiyat, null, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(x => x.AlisFiyat, new { @class = "form-control rounded-pill" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.SatisFiyat, null, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(x => x.SatisFiyat, new { @class = "form-control rounded-pill" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.Kategori, null, new { @class = "form-label fw-bold" })
+                        @Html.DropDownListFor(x => x.Kategoriid, (List<SelectListItem>)ViewBag.dgr1, new { @class = "form-control rounded-pill" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(x => x.UrunGorsel, null, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(x => x.UrunGorsel, new { @class = "form-control rounded-pill" })
+                    </div>
+                    
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary rounded-pill px-4 py-2">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

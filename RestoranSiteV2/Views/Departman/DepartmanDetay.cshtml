@@ -1,0 +1,88 @@
+﻿@using RestoranSiteV2.Models.Siniflar
+@model List<Personel>
+@{
+    ViewBag.Title = "DepartmanDetay";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+
+
+<!-- DataTables CSS -->
+<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<h1 class="h3 mb-2 text-gray-800">Departman Adı : @ViewBag.d</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">@ViewBag.d Departmanında Çalışan Kişiler</h6>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-end" style="margin-bottom:10px;">
+            <input type="text" id="customSearch" class="form-control" placeholder="Tabloda ara..." style="max-width: 200px; margin-right: 5px;" />
+            <button id="searchButton" class="btn btn-primary" style="margin-right: 10px;">Ara</button>
+          
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            Personel ID
+                        </th>
+                        <th>
+                            Personel Adı
+                        </th>
+                        <th>
+                            Personel Soyadı
+                        </th>
+                        <th>
+                            Görsel
+                        </th>
+                        <th>
+                            Satışlar
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@x.Personelid</td>
+                            <td>@x.PersonelAd</td>
+                            <td>@x.PersonelSoyad</td>
+                            <td>@x.PersonelGorsel</td>
+                            <td><a href="/Departman/DepartmanPersonelSatis/@x.Personelid" class="btn btn-outline-warning">Satışlar</a></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- DataTables JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $('#dataTable').DataTable({
+        "language": {
+            "search": "Ara:",
+            "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
+            "infoEmpty": "Kayıt yok",
+            "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
+            "paginate": {
+                "first": "İlk",
+                "last": "Son",
+                "next": "Sonraki",
+                "previous": "Önceki"
+            }
+        }
+    });
+</script>
