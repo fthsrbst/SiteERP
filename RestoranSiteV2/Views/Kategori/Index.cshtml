@@ -2,59 +2,307 @@
 @model List<Kategori>
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<style>
+
+    #kategoriChart {
+        position: relative; /* Ensure it has a positioning context */
+        z-index: 10; /* Set a higher z-index */
+        transition: none;
+    }
+
+    /* Modern Search Input */
+    .dataTables_filter input[type="search"] {
+        padding: 10px 20px;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+        outline: none;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        width: 250px;
+        background-color: #f9f9f9;
+    }
+
+        /* On Focus */
+        .dataTables_filter input[type="search"]:focus {
+            border-color: #4e73df;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(78, 115, 223, 0.5); /* Subtle blue glow */
+        }
+
+    /* Search Icon Styling */
+    .dataTables_filter i {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        transition: color 0.3s ease;
+    }
+
+    .dataTables_filter input[type="search"]:focus + i {
+        color: #4e73df;
+    }
+
+
+
+    .dropdown-menu i {
+        margin-right: 8px; /* Add some space between icon and text */
+    }
+
+    .dropdown-menu .dropdown-item {
+        display: flex; /* Align the icon and text horizontally */
+        align-items: center;
+    }
+
+    .card {
+        z-index: 1;
+        margin: 20px;
+        border-radius: 15px; /* Köşeleri yuvarla */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge ekle */
+        transition: width 0.3s ease, border-radius 0.3s ease; /* Transition for width and border-radius */
+        overflow: hidden; /* Prevent content overflow during animation */
+        position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
+        width: 48%; /* Kartın başlangıç genişliği */
+    }
+
+        .card.expanded {
+            width: 100%; /* Kart tamamen genişlesin */
+            z-index: 10; /* Diğer kartların üstünde olmasını sağlamak için z-index ekliyoruz */
+        }
+
+    .card-body {
+        margin-top: 20px;
+        overflow: visible;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a); /* Gradient arka plan */
+        color: #fff;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+    }
+
+        .card-header .text-primary {
+            color: white !important; /* Yazı rengi beyaz olacak */
+        }
+
+    .btn {
+        border-radius: 8px; /* Buton köşelerini yuvarla */
+        font-weight: bold;
+        transition: all 0.3s ease; /* Hover geçişi */
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    .btn-outline-success:hover {
+        background-color: #1cc88a;
+        color: white;
+    }
+
+    table.table tbody tr:hover {
+        background-color: #f1f1f1; /* Hover sırasında satır rengini değiştir */
+    }
+
+    table.table th, table.table td {
+        vertical-align: middle; /* İçeriği dikeyde ortala */
+        text-align: center;
+    }
+    /* Tablo genel stili */
+    table.table {
+        background: white;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        table.table th {
+            background: #4e73df;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border: none; /* Remove all borders */
+        }
+
+        table.table td {
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+            border-right: none;
+        }
+
+        table.table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        table.table tr:hover {
+            background: #e2e6ea;
+        }
+
+    /* Buton stilleri */
+    a.btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        a.btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    a.btn-outline-success {
+        border-color: #1cc88a;
+        color: #1cc88a;
+    }
+
+        a.btn-outline-success:hover {
+            background-color: #1cc88a;
+            color: white;
+        }
+
+    a.btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+
+        a.btn-outline-primary:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+    a.btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+
+        a.btn-outline-danger:hover {
+            background-color: #e74a3b;
+            color: white;
+        }
+</style>
+<!-- DataTables JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+
+
 
 <!-- DataTables CSS -->
 <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
 
-<h1 class="h3 mb-2 text-gray-800">Kategori Sayfası</h1>
+<!-- FontAwesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-<!-- DataTales Example -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Kategori Tablosu</h6>
-    </div>
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="/Kategori/KategoriEkle/" class="btn btn-primary">Yeni Kategori Ekle</a>
-            <a href="/Kategori/ExcelExport" class="btn btn-outline-success">İndir</a>
+<div class="d-flex justify-content-between">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3" data-expanded="false">
+            <h6 color: white; class="m-0 font-weight-bold text-primary">Kategori Tablosu</h6>
         </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="/Kategori/KategoriEkle/" class="btn btn-primary">Yeni Kategori Ekle</a>
+                <a href="/Kategori/ExcelExport" class="btn btn-outline-success">İndir</a>
+            </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Kategori Adı</th>
-                        <th>Güncelle</th>
-                        <th>Sil</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var k in Model)
-                    {
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
                         <tr>
-                            <td>@k.KategoriID</td>
-                            <td>@k.KategoriAd</td>
-                            <td><a href="/Kategori/KategoriGetir/@k.KategoriID" class="btn btn-outline-primary">Güncelle</a></td>
-                            <td><a href="/Kategori/KategoriSil/@k.KategoriID" class="btn btn-outline-danger">Sil</a></td>
+                            <th>#</th>
+                            <th>ID</th>
+                            <th>Kategori Adı</th>
+
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var k in Model)
+                        {
+                            <tr>
+                                <td style="width: 50px;">
+                                    <!-- Set the width to match the button size -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-bars"></i> <!-- Hamburger icon without arrow -->
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                            <!-- 'dropdown-menu-end' for right alignment -->
+                                            <li>
+                                                <a class="dropdown-item" href="/Kategori/KategoriGetir/@k.KategoriID">
+                                                    <i class="fas fa-edit"></i> Düzenle <!-- Edit icon -->
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="/Kategori/KategoriSil/@k.KategoriID">
+                                                    <i class="fas fa-trash"></i> Sil <!-- Trash icon -->
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+
+                                <td>@k.KategoriID</td>
+                                <td>@k.KategoriAd</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Kategoriye Ait Ürün Sayıları</h6>
+        </div>
+        <div class="card-body">
+            <div id="kategoriChart" style="height: 350px;"></div>  <!-- Container'a height ekleyin -->
+        </div>
+    </div>
+
+</div>
+<div class="d-flex justify-content-between">
+    <div class="card shadow mb-4" style="width: 48%;">
+        <div class="card-header py-3">
+            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">sol Kategori Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <p>Bu, sol tarafa yerleştirilen card içeriğidir.</p>
+        </div>
+    </div>
+    <div class="card shadow mb-4" style="width: 48%;">
+        <div class="card-header py-3">
+            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">sağ Kategori Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <p>Bu, sağ tarafa yerleştirilen card içeriğidir.</p>
         </div>
     </div>
 </div>
 
-<!-- DataTables JavaScript -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
 
 <script>
+
     $('#dataTable').DataTable({
         "language": {
-            "search": "Ara:",
+            "search": "",
             "lengthMenu": "Her sayfada _MENU_ kayıt göster",
             "zeroRecords": "Eşleşen kayıt bulunamadı",
             "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
@@ -66,10 +314,13 @@
                 "next": "Sonraki",
                 "previous": "Önceki"
             }
+        },
+        "initComplete": function () {
+            // Add placeholder text to the search input
+            $('input[type="search"]').attr("placeholder", "Ara");
         }
     });
-</script>
-<script>
+
     $(document).ready(function () {
         $('#dataTable').DataTable({
             "language": {
@@ -82,4 +333,81 @@
             ]
         });
     });
+
+    $(document).ready(function () {
+        // Kart header'ına tıklandığında animasyonu başlatıyoruz
+        $('.card-header').on('click', function () {
+            var card = $(this).closest('.card');
+            var isExpanded = $(this).data('expanded'); // Kartın genişleyip genişlemediğini kontrol ediyoruz
+
+            if (isExpanded) {
+                // Kartı daraltıyoruz
+                card.removeClass('expanded').animate({
+                    width: '48%' // Başlangıç genişliği
+                }, 300);
+                $(this).data('expanded', false);
+            } else {
+                // Kartı genişletiyoruz
+                card.addClass('expanded').animate({
+                    width: '150%' // Tam genişlik
+                }, 300);
+                $(this).data('expanded', true);
+            }
+        });
+    });
+
+</script>
+<script>
+
+    $(document).ready(function () {
+    // Fetch the category data and render the chart
+    $.ajax({
+        url: '@Url.Action("GetKategoriUrunSayilari", "Kategori")', // URL to the new action
+        method: 'GET',
+        success: function (grafikVerisi) {
+            // Log the data to check if it's fetched correctly
+            console.log(grafikVerisi);
+
+            // Extract category names and product counts
+            var kategoriAdlari = grafikVerisi.map(function (k) { return k.kategoriAd; });
+            var urunSayilari = grafikVerisi.map(function (k) { return k.urunSayisi; });
+
+            // Define the chart options
+            var options = {
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
+                series: [{
+                    name: 'Ürün Sayısı',
+                    data: urunSayilari
+                }],
+                xaxis: {
+                    categories: kategoriAdlari
+                },
+                dataLabels: {
+                    enabled: true
+                },
+                title: {
+                    text: 'Kategoriye Ait Ürün Sayıları',
+                    align: 'center',
+                    style: {
+                        fontSize: '18px',
+                        fontWeight: 'bold',
+                        color: '#333'
+                    }
+                }
+            };
+
+            // Initialize and render the chart
+            var chart = new ApexCharts(document.querySelector("#kategoriChart"), options);
+            chart.render();
+        },
+        error: function (error) {
+            console.error("Data fetch failed:", error);
+        }
+    });
+});
+
+
 </script>

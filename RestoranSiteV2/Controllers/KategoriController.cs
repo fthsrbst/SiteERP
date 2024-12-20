@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using RestoranSiteV2.Models.Siniflar;
 namespace RestoranSiteV2.Controllers
@@ -83,5 +84,20 @@ namespace RestoranSiteV2.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Kategoriler.xlsx");
             }
         }
+        public JsonResult GetKategoriUrunSayilari()
+        {
+            var kategoriUrunSayilari = c.Kategoris
+                                         .Select(k => new
+                                         {
+                                             kategoriAd = k.KategoriAd,
+                                             urunSayisi = k.Uruns.Count
+                                         })
+                                         .ToList();
+
+            return Json(kategoriUrunSayilari, JsonRequestBehavior.AllowGet);
+        }
+
+
+
     }
 }
