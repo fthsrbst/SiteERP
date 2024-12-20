@@ -23,7 +23,7 @@ namespace RestoranSiteV2.Models.Siniflar
         [Column(TypeName = "Varchar")]
         [StringLength(250)]
         public string PersonelGorsel { get; set; }
-
+        public bool Durum { get; set; } = true;
         public ICollection<SatisHareket> SatisHarekets { get; set; }
         public int Departmanid { get; set; }
         public virtual Departman Departman { get; set; }

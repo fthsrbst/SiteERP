@@ -360,11 +360,6 @@
 
 
 
-
-
-
-
-
 <div class="modal fade" id="urunEkleModal" tabindex="-1" role="dialog" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -672,13 +667,13 @@
             if (isExpanded) {
                 // Kartı daraltıyoruz
                 card.removeClass('expanded').animate({
-                    width: '48%' // Başlangıç genişliği
+                    width: '50%' // Başlangıç genişliği
                 }, 300);
                 $(this).data('expanded', false);
             } else {
                 // Kartı genişletiyoruz
                 card.addClass('expanded').animate({
-                    width: '150%' // Tam genişlik
+                    width: '200%' // Tam genişlik
                 }, 300);
                 $(this).data('expanded', true);
             }

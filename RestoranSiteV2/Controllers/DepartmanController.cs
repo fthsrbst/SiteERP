@@ -61,6 +61,36 @@ namespace RestoranSiteV2.Controllers
             return View(degerler);
             
         }
+        public JsonResult GetDepartmanPersonelSayilari()
+        {
+            var departmanPersonelSayilari = c.Departmans
+                                             .Select(d => new
+                                             {
+                                                 departmanAd = d.DepartmanAd,
+                                                 personelSayisi = d.Personels.Count
+                                             })
+                                             .ToList();
+
+            return Json(departmanPersonelSayilari, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetDepartmanPersonelleri(int departmanId)
+        {
+            var personelListesi = c.Personels
+                                  .Where(p => p.Departmanid == departmanId)
+                                  .Select(p => new
+                                  {
+                                      p.Personelid,
+                                      p.PersonelAd,
+                                      p.PersonelSoyad,
+                                      p.PersonelGorsel
+                                  })
+                                  .ToList();
+
+            return Json(personelListesi, JsonRequestBehavior.AllowGet);
+        }
+
+
 
     }
 }
