@@ -18,43 +18,43 @@
     }
 
     .modal-header {
-    background: linear-gradient(45deg, #4e73df, #1cc88a);
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    border-bottom: none;
-    position: relative;
-    padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
-}
+        background: linear-gradient(45deg, #4e73df, #1cc88a);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: none;
+        position: relative;
+        padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
+    }
 
-.modal-header .btn-close {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    background-color: #fff; /* Butonun arka planını beyaz yap */
-    border-radius: 50%; /* Yuvarlak görünüm */
-    border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-}
+        .modal-header .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background-color: #fff; /* Butonun arka planını beyaz yap */
+            border-radius: 50%; /* Yuvarlak görünüm */
+            border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
 
-.modal-header .btn-close:hover {
-    background-color: #f8f9fa; /* Hover sırasında açık gri */
-    border-color: #ccc; /* Kenarlık rengini açık gri yap */
-}
+            .modal-header .btn-close:hover {
+                background-color: #f8f9fa; /* Hover sırasında açık gri */
+                border-color: #ccc; /* Kenarlık rengini açık gri yap */
+            }
 
-.modal-header .btn-close::before {
-    content: '×'; /* Çarpı sembolü */
-    font-size: 20px;
-    font-weight: bold;
-    color: #4e73df; /* Gradient ile uyumlu renk */
-}
+            .modal-header .btn-close::before {
+                content: '×'; /* Çarpı sembolü */
+                font-size: 20px;
+                font-weight: bold;
+                color: #4e73df; /* Gradient ile uyumlu renk */
+            }
 
     .modal-footer {
         border-top: none;
@@ -95,41 +95,12 @@
         z-index: 10; /* Set a higher z-index */
         transition: none;
     }
-
-    /* Modern Search Input */
-    .dataTables_filter input[type="search"] {
-        padding: 10px 20px;
-        border-radius: 25px;
-        border: 1px solid #ddd;
-        outline: none;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        width: 250px;
-        background-color: #f9f9f9;
+    table.dataTable th,
+    table.dataTable td {
+        border: none !important; /* Kenarlıkları kaldır */
     }
 
-        /* On Focus */
-        .dataTables_filter input[type="search"]:focus {
-            border-color: #4e73df;
-            background-color: #fff;
-            box-shadow: 0 0 8px rgba(78, 115, 223, 0.5); /* Subtle blue glow */
-        }
-
-    /* Search Icon Styling */
-    .dataTables_filter i {
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #888;
-        transition: color 0.3s ease;
-    }
-
-    .dataTables_filter input[type="search"]:focus + i {
-        color: #4e73df;
-    }
-
-
+   
 
     .dropdown-menu i {
         margin-right: 8px; /* Add some space between icon and text */
@@ -193,45 +164,7 @@
         color: white;
     }
 
-    table.table tbody tr:hover {
-        background-color: #f1f1f1; /* Hover sırasında satır rengini değiştir */
-    }
-
-    table.table th, table.table td {
-        vertical-align: middle; /* İçeriği dikeyde ortala */
-        text-align: center;
-    }
-    /* Tablo genel stili */
-    table.table {
-        background: white;
-        border-collapse: collapse;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-        table.table th {
-            background: #4e73df;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            border: none; /* Remove all borders */
-        }
-
-        table.table td {
-            padding: 10px;
-            text-align: center;
-            vertical-align: middle;
-            border-right: none;
-        }
-
-        table.table tr:nth-child(even) {
-            background: #f2f2f2;
-        }
-
-        table.table tr:hover {
-            background: #e2e6ea;
-        }
+   
 
     /* Buton stilleri */
     a.btn-primary {
@@ -275,14 +208,19 @@
         }
 </style>
 <!-- DataTables JavaScript -->
+
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+<link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
 
-
-
-<!-- DataTables CSS -->
-<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
 
 <!-- FontAwesome for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -303,9 +241,10 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>#</th>
+
                             <th>ID</th>
                             <th>Kategori Adı</th>
+                            <th>İşlemler</th>
 
                         </tr>
                     </thead>
@@ -313,6 +252,10 @@
                         @foreach (var k in Model)
                         {
                             <tr>
+
+
+                                <td>@k.KategoriID</td>
+                                <td>@k.KategoriAd</td>
                                 <td style="width: 50px;">
                                     <!-- Set the width to match the button size -->
                                     <div class="dropdown">
@@ -334,10 +277,6 @@
                                         </ul>
                                     </div>
                                 </td>
-
-                                <td>@k.KategoriID</td>
-                                <td>@k.KategoriAd</td>
-
                             </tr>
                         }
                     </tbody>

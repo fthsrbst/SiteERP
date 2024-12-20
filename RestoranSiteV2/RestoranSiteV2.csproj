@@ -159,7 +159,6 @@
     <Compile Include="Controllers\DepartmanController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KategoriController.cs" />
-    <Compile Include="Controllers\TESTController.cs" />
     <Compile Include="Controllers\UrunController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -224,6 +223,8 @@
     <Content Include="Template\assets\img\elements\4.jpg" />
     <Content Include="Template\assets\img\elements\5.jpg" />
     <Content Include="Template\assets\img\elements\7.jpg" />
+    <Content Include="Template\assets\img\favicon\araskargo_icon.png" />
+    <Content Include="Template\assets\img\favicon\araskargo_logo_no_bg.png" />
     <Content Include="Template\assets\img\favicon\favicon.ico" />
     <Content Include="Template\assets\img\icons\brands\asana.png" />
     <Content Include="Template\assets\img\icons\brands\behance.png" />
@@ -2395,7 +2396,6 @@
     <Content Include="Template\scss\_theme\_theme.scss" />
     <Content Include="Template\yarn.lock" />
     <Content Include="Views\TESTView.cshtml" />
-    <Content Include="Views\TEST\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

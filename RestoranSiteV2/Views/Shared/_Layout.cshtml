@@ -4,6 +4,60 @@
 }
 <!doctype html>
 
+
+<style>
+    .menu-item {
+        background-color: transparent; /* Koyu renkli arka planı kaldır */
+        margin: 0; /* Gereksiz kenar boşluklarını kaldır */
+        padding: 10px 16px; /* Yatay ve dikey iç boşluk ayarla */
+        border-radius: 6px; /* Yuvarlatılmış köşe */
+        transition: all 0.3s ease-in-out; /* Yumuşak geçiş */
+    }
+
+        .menu-item.active:hover {
+            background-color: #d8ecff; /* Hover'da daha açık mavi */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Hover gölgesi */
+        }
+
+    /* Sidebar ve daraltma stili */
+    .sidebar {
+        width: 250px;
+        transition: width 0.3s ease-in-out;
+    }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar .menu-item-text {
+            display: inline;
+        }
+
+        .sidebar.collapsed .menu-item-text {
+            display: none;
+        }
+
+    .toggle-btn {
+        position: absolute;
+        top: 10px;
+        left: 260px;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar.collapsed + .toggle-btn {
+        left: 90px;
+    }
+
+
+
+
+</style>
 <html lang="en"
       class="light-style layout-menu-fixed layout-compact"
       dir="ltr"
@@ -21,7 +75,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="~/Template/assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="~/Template/assets/img/favicon/araskargo_icon.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -49,14 +103,17 @@
 </head>
 
 <body>
+
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
+
         <div class="layout-container">
             <!-- Menu -->
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="index.html" class="app-brand-link">
+
+                    <a href="/Dashboard/Index/" class="app-brand-link">
                         <span class="app-brand-logo demo">
                             <svg width="25"
                                  viewBox="0 0 25 42"
@@ -74,33 +131,16 @@
                                           id="path-5"></path>
                                 </defs>
                                 <g id="g-app-brand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="Brand-Logo" transform="translate(-27.000000, -15.000000)">
-                                        <g id="Icon" transform="translate(27.000000, 15.000000)">
-                                            <g id="Mask" transform="translate(0.000000, 8.000000)">
-                                                <mask id="mask-2" fill="white">
-                                                    <use xlink:href="#path-1"></use>
-                                                </mask>
-                                                <use fill="#696cff" xlink:href="#path-1"></use>
-                                                <g id="Path-3" mask="url(#mask-2)">
-                                                    <use fill="#696cff" xlink:href="#path-3"></use>
-                                                    <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-3"></use>
-                                                </g>
-                                                <g id="Path-4" mask="url(#mask-2)">
-                                                    <use fill="#696cff" xlink:href="#path-4"></use>
-                                                    <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-4"></use>
-                                                </g>
-                                            </g>
-                                            <g id="Triangle"
-                                               transform="translate(19.000000, 11.000000) rotate(-300.000000) translate(-19.000000, -11.000000) ">
-                                                <use fill="#696cff" xlink:href="#path-5"></use>
-                                                <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-5"></use>
-                                            </g>
-                                        </g>
-                                    </g>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="42" viewBox="0 0 25 42">
+                                        <!-- PNG resmi buraya ekleniyor -->
+                                        <image href="~/Template/assets/img/favicon/araskargo_icon.png" x="0" y="0" width="25" height="42" />
+                                    </svg>
+
+
                                 </g>
                             </svg>
                         </span>
-                        <span class="app-brand-text demo menu-text fw-bold ms-2">Han Restoran</span>
+                        <span class="app-brand-text demo menu-text fw-bold ms-2">Aras Kargo</span>
                     </a>
 
                     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -120,7 +160,7 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item active">
-                                <a href="index.html" class="menu-link">
+                                <a href="/Dashboard/Index/" class="menu-link">
                                     <div class="text-truncate" data-i18n="Analytics">Analytics</div>
                                 </a>
                             </li>
@@ -720,5 +760,24 @@
 
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentPath = window.location.pathname; // Mevcut URL yolunu al
+            const menuLinks = document.querySelectorAll(".menu-link");
+
+            menuLinks.forEach(link => {
+                if (link.getAttribute("href") === currentPath) {
+                    link.parentElement.classList.add("active"); // Linkin üst elemana `active` sınıfı ekle
+                }
+            });
+        });
+
+
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+</script>
 </body>
 </html>

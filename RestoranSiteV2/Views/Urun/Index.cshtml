@@ -19,18 +19,222 @@
         position: relative;
         z-index: 10; /* Ensure the button stays above background elements */
     }
+
+    .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: none;
+        position: relative;
+        padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
+    }
+
+        .modal-header .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background-color: #fff; /* Butonun arka planını beyaz yap */
+            border-radius: 50%; /* Yuvarlak görünüm */
+            border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+            .modal-header .btn-close:hover {
+                background-color: #f8f9fa; /* Hover sırasında açık gri */
+                border-color: #ccc; /* Kenarlık rengini açık gri yap */
+            }
+
+            .modal-header .btn-close::before {
+                content: '×'; /* Çarpı sembolü */
+                font-size: 20px;
+                font-weight: bold;
+                color: #4e73df; /* Gradient ile uyumlu renk */
+            }
+
+    .modal-footer {
+        border-top: none;
+    }
+
+    .modal-body input {
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    .modal-footer .btn {
+        border-radius: 10px;
+        font-weight: bold;
+        padding: 10px 20px;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #ddd;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+    }
+
+    #kategoriChart {
+        position: relative; /* Ensure it has a positioning context */
+        z-index: 10; /* Set a higher z-index */
+        transition: none;
+    }
+
+    table.dataTable th,
+    table.dataTable td {
+        border: none !important; /* Kenarlıkları kaldır */
+    }
+
+
+
+    .dropdown-menu i {
+        margin-right: 8px; /* Add some space between icon and text */
+    }
+
+    .dropdown-menu .dropdown-item {
+        display: flex; /* Align the icon and text horizontally */
+        align-items: center;
+    }
+
+    .card {
+        z-index: 1;
+        margin: 20px;
+        border-radius: 15px; /* Köşeleri yuvarla */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge ekle */
+        transition: width 0.3s ease, border-radius 0.3s ease; /* Transition for width and border-radius */
+        overflow: hidden; /* Prevent content overflow during animation */
+        position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
+        width: 100%; /* Kartın başlangıç genişliği */
+    }
+
+        .card.expanded {
+            width: 100%; /* Kart tamamen genişlesin */
+            z-index: 10; /* Diğer kartların üstünde olmasını sağlamak için z-index ekliyoruz */
+        }
+
+    .card-body {
+        margin-top: 20px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        overflow: visible;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a); /* Gradient arka plan */
+        color: #fff;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+    }
+
+        .card-header .text-primary {
+            color: white !important; /* Yazı rengi beyaz olacak */
+        }
+
+    .btn {
+        border-radius: 8px; /* Buton köşelerini yuvarla */
+        font-weight: bold;
+        transition: all 0.3s ease; /* Hover geçişi */
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    .btn-outline-success:hover {
+        background-color: #1cc88a;
+        color: white;
+    }
+
+
+
+    /* Buton stilleri */
+    a.btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        a.btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    a.btn-outline-success {
+        border-color: #1cc88a;
+        color: #1cc88a;
+    }
+
+        a.btn-outline-success:hover {
+            background-color: #1cc88a;
+            color: white;
+        }
+
+    a.btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+
+        a.btn-outline-primary:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+    a.btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+
+        a.btn-outline-danger:hover {
+            background-color: #e74a3b;
+            color: white;
+        }
 </style>
 
 <!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+<link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+<!-- FontAwesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 
 
-<h1 class="h3 mb-2 text-gray-800">Ürünler Sayfası</h1>
+
 
 @if (TempData["AlertMessage"] != null)
 {
@@ -53,95 +257,120 @@
 }
 
 
+<div class="d-flex justify-content-between">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3" data-expanded="false">
+            <h6 class="m-0 font-weight-bold text-primary">Ürünler Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Ürünler Tablosu</h6>
-    </div>
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+                <!--<a href="/Urun/YeniUrun/" class="btn btn-primary">Yeni Ürün Ekle</a-->
+                <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#urunEkleModal">Yeni Ürün Ekle</a>
 
-            <!--<a href="/Urun/YeniUrun/" class="btn btn-primary">Yeni Ürün Ekle</a-->
-            <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#urunEkleModal">Yeni Ürün Ekle</a>
+                <!-- Sağ tarafa hizalanan "Yazdır" butonu -->
+                <div>
+                    <label for="excelFileInput" class="btn btn-outline-warning">Excel Yükle</label>
+                    <input type="file" id="excelFileInput" style="display:none;" />
 
-            <!-- Sağ tarafa hizalanan "Yazdır" butonu -->
-            <div>
-                <label for="excelFileInput" class="btn btn-outline-warning">Excel Yükle</label>
-                <input type="file" id="excelFileInput" style="display:none;" />
-
-                <a href="/Urun/ExcelExport" id="excelExportButton" class="btn btn-outline-success mr-2">İndir</a>
-                <a href="javascript:void(0);" id="printButton" class="btn btn-outline-info">Yazdır</a>
+                    <a href="/Urun/ExcelExport" id="excelExportButton" class="btn btn-outline-success mr-2">İndir</a>
+                    <a href="javascript:void(0);" id="printButton" class="btn btn-outline-info">Yazdır</a>
+                </div>
+                <div id="popupMessage" style="display: none;" class="alert alert-info"></div>
             </div>
-            <div id="popupMessage" style="display: none;" class="alert alert-info"></div>
-        </div>
 
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="urunTablo">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)"> ID</th>
-                        <th onclick="sortTable(1)">Ürün</th>
-                        <th onclick="sortTable(2)">Marka</th>
-                        <th onclick="sortTable(3)">Stok</th>
-                        <th onclick="sortTable(4)">Alış Fiyatı</th>
-                        <th onclick="sortTable(5)">Satış Fiyatı</th>
-                        <th onclick="sortTable(6)">Kategori</th>
-                        <th>Görsel</th>
-                        <th>Güncelle</th>
-                        <th>Sil</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var u in Model)
-                    {
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="urunTablo">
+                    <thead>
                         <tr>
-                            <td>@u.Urunid</td>
-                            <td>@u.UrunAd</td>
-                            <td>@u.Marka</td>
-                            <td>@u.Stok</td>
-                            <td>@u.AlisFiyat</td>
-                            <td>@u.SatisFiyat</td>
-                            <td>@u.Kategori.KategoriAd</td>
-                            <td><img src="@u.UrunGorsel" alt="Görsel" width="50" /></td>
-                            <td><a href="/Urun/UrunGetir/@u.Urunid" class="btn btn-outline-primary">Güncelle</a></td>
-                            <td><a href="/Urun/UrunSil/@u.Urunid" class="btn btn-outline-danger">Sil</a></td>
+                            <th onclick="sortTable(0)"> ID</th>
+                            <th onclick="sortTable(1)">Ürün</th>
+                            <th onclick="sortTable(2)">Marka</th>
+                            <th onclick="sortTable(3)">Stok</th>
+                            <th onclick="sortTable(4)">Alış Fiyatı</th>
+                            <th onclick="sortTable(5)">Satış Fiyatı</th>
+                            <th onclick="sortTable(6)">Kategori</th>
+                            <th>Görsel</th>
+                            <th>İşlemler</th>
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model)
+                        {
+                            <tr>
+                                <td>@u.Urunid</td>
+                                <td>@u.UrunAd</td>
+                                <td>@u.Marka</td>
+                                <td>@u.Stok</td>
+                                <td>@u.AlisFiyat</td>
+                                <td>@u.SatisFiyat</td>
+                                <td>@u.Kategori.KategoriAd</td>
+                                <td><img src="@u.UrunGorsel" alt="Görsel" width="50" /></td>
+                                <td style="width: 50px;">
+                                    <!-- İşlem menüsü dropdown -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton-@u.Urunid" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-bars"></i> <!-- Hamburger ikonu -->
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-@u.Urunid">
+                                            <li>
+                                                <a class="dropdown-item" href="/Urun/UrunGetir/@u.Urunid">
+                                                    <i class="fas fa-edit"></i> Güncelle
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="/Urun/UrunSil/@u.Urunid">
+                                                    <i class="fas fa-trash"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
 
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!-- Başarı veya hata mesajlarını göstermek için basit bir modal -->
-    <div id="popupModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="popupTitle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="popupMessage">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                </div>
+                        }
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+<div class="d-flex justify-content-between">
+    <div class="card shadow mb-4" style="width: 48%;">
+        <div class="card-header py-3">
+            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">sol Kategori Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <p>Bu, sol tarafa yerleştirilen card içeriğidir.</p>
+        </div>
+    </div>
+    <div class="card shadow mb-4" style="width: 48%;">
+        <div class="card-header py-3">
+            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">sağ Kategori Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <p>Bu, sağ tarafa yerleştirilen card içeriğidir.</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 
 <div class="modal fade" id="urunEkleModal" tabindex="-1" role="dialog" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" style="color:white;" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
+                
             </div>
             <div class="modal-body">
                 <form id="urunEkleForm">
@@ -188,8 +417,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
 
     $('#urunTablo').DataTable({
@@ -267,11 +494,11 @@
         const messageContainer = document.createElement("div");
         messageContainer.classList.add("alert", "alert-success");
         messageContainer.innerHTML = `
-        ${"Excel başarıyla indirildi!"}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    `;
+            ${"Excel başarıyla indirildi!"}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        `;
 
         // Append the message to the body or a specific element where you want to show it
         document.body.appendChild(messageContainer);
@@ -312,38 +539,38 @@
 
         // Inject styles to ensure the table looks good when printed
         const styles = `
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            table, th, td {
-                border: 1px solid black;
-            }
-            th, td {
-                padding: 8px;
-                text-align: left;
-            }
-        </style>
-    `;
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                table, th, td {
+                    border: 1px solid black;
+                }
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                }
+            </style>
+        `;
 
         // Set the content of the print window
         printWindow.document.write(`
-        <html>
-            <head>
-                <title>Ürünler Tablosu</title>
-                ${styles}
-            </head>
-            <body>
-                <h2>Ürünler Tablosu</h2>
-                ${table.outerHTML}
-            </body>
-        </html>
-    `);
+            <html>
+                <head>
+                    <title>Ürünler Tablosu</title>
+                    ${styles}
+                </head>
+                <body>
+                    <h2>Ürünler Tablosu</h2>
+                    ${table.outerHTML}
+                </body>
+            </html>
+        `);
 
         // Close the document and trigger the print dialog
         printWindow.document.close();
@@ -403,42 +630,64 @@
 
 
     function refreshTable() {
-    $.ajax({
-        url: '/Urun/', // Ensure this URL returns the updated product list
-        type: 'GET',
-        success: function (data) {
-            var tableBody = $('#urunTablo tbody');
-            tableBody.empty(); // Clear the existing table rows
+        $.ajax({
+            url: '/Urun/', // Ensure this URL returns the updated product list
+            type: 'GET',
+            success: function (data) {
+                var tableBody = $('#urunTablo tbody');
+                tableBody.empty(); // Clear the existing table rows
 
-            // Loop through the new data and append each product as a table row
-            data.forEach(function (u) {
-                var newRow = `
-                    <tr>
-                        <td>${u.Urunid}</td>
-                        <td>${u.UrunAd}</td>
-                        <td>${u.Marka}</td>
-                        <td>${u.Stok}</td>
-                        <td>${u.AlisFiyat}</td>
-                        <td>${u.SatisFiyat}</td>
-                        <td>${u.Kategori.KategoriAd}</td>
-                        <td><img src="${u.UrunGorsel}" alt="Görsel" width="50" /></td>
-                        <td><a href="/Urun/UrunGetir/${u.Urunid}" class="btn btn-outline-primary">Güncelle</a></td>
-                        <td><a href="/Urun/UrunSil/${u.Urunid}" class="btn btn-outline-danger">Sil</a></td>
-                    </tr>
-                `;
-                tableBody.append(newRow); // Append the new row to the table
-            });
-        },
-        error: function () {
-            alert('Tablo verisi yüklenemedi.');
-        }
+                // Loop through the new data and append each product as a table row
+                data.forEach(function (u) {
+                    var newRow = `
+                        <tr>
+                            <td>${u.Urunid}</td>
+                            <td>${u.UrunAd}</td>
+                            <td>${u.Marka}</td>
+                            <td>${u.Stok}</td>
+                            <td>${u.AlisFiyat}</td>
+                            <td>${u.SatisFiyat}</td>
+                            <td>${u.Kategori.KategoriAd}</td>
+                            <td><img src="${u.UrunGorsel}" alt="Görsel" width="50" /></td>
+                            <td><a href="/Urun/UrunGetir/${u.Urunid}" class="btn btn-outline-primary">Güncelle</a></td>
+                            <td><a href="/Urun/UrunSil/${u.Urunid}" class="btn btn-outline-danger">Sil</a></td>
+                        </tr>
+                    `;
+                    tableBody.append(newRow); // Append the new row to the table
+                });
+            },
+            error: function () {
+                alert('Tablo verisi yüklenemedi.');
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        // Kart header'ına tıklandığında animasyonu başlatıyoruz
+        $('.card-header').on('click', function () {
+            var card = $(this).closest('.card');
+            var isExpanded = $(this).data('expanded'); // Kartın genişleyip genişlemediğini kontrol ediyoruz
+
+            if (isExpanded) {
+                // Kartı daraltıyoruz
+                card.removeClass('expanded').animate({
+                    width: '48%' // Başlangıç genişliği
+                }, 300);
+                $(this).data('expanded', false);
+            } else {
+                // Kartı genişletiyoruz
+                card.addClass('expanded').animate({
+                    width: '150%' // Tam genişlik
+                }, 300);
+                $(this).data('expanded', true);
+            }
+        });
     });
-}
-
-  
-</script>
-
-
-
 
 </script>
+
+
+
+
+    </script>
