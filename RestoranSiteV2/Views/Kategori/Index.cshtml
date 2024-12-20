@@ -11,6 +11,85 @@
 
 <style>
 
+    .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .modal-header {
+    background: linear-gradient(45deg, #4e73df, #1cc88a);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: none;
+    position: relative;
+    padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
+}
+
+.modal-header .btn-close {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background-color: #fff; /* Butonun arka planını beyaz yap */
+    border-radius: 50%; /* Yuvarlak görünüm */
+    border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.modal-header .btn-close:hover {
+    background-color: #f8f9fa; /* Hover sırasında açık gri */
+    border-color: #ccc; /* Kenarlık rengini açık gri yap */
+}
+
+.modal-header .btn-close::before {
+    content: '×'; /* Çarpı sembolü */
+    font-size: 20px;
+    font-weight: bold;
+    color: #4e73df; /* Gradient ile uyumlu renk */
+}
+
+    .modal-footer {
+        border-top: none;
+    }
+
+    .modal-body input {
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    .modal-footer .btn {
+        border-radius: 10px;
+        font-weight: bold;
+        padding: 10px 20px;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #ddd;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+    }
+
     #kategoriChart {
         position: relative; /* Ensure it has a positioning context */
         z-index: 10; /* Set a higher z-index */
@@ -216,7 +295,7 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="/Kategori/KategoriEkle/" class="btn btn-primary">Yeni Kategori Ekle</a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kategoriEkleModal">Yeni Kategori Ekle</a>
                 <a href="/Kategori/ExcelExport" class="btn btn-outline-success">İndir</a>
             </div>
 
@@ -295,7 +374,29 @@
     </div>
 </div>
 
-
+<!-- Kategori Ekle Modal -->
+<div class="modal fade" id="kategoriEkleModal" tabindex="-1" aria-labelledby="kategoriEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="kategoriEkleModalLabel">Yeni Kategori Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="kategoriEkleForm">
+                    <div class="mb-3">
+                        <label for="kategoriAd" class="form-label">Kategori Adı</label>
+                        <input type="text" class="form-control" id="kategoriAd" placeholder="Kategori adını giriniz" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="kategoriEkleButton">Ekle</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -333,6 +434,34 @@
             ]
         });
     });
+
+    $(document).ready(function () {
+    $('#kategoriEkleButton').on('click', function () {
+        var kategoriAd = $('#kategoriAd').val();
+
+        if (kategoriAd.trim() === '') {
+            alert('Lütfen bir kategori adı giriniz!');
+            return;
+        }
+
+        // AJAX ile kategori ekleme işlemi
+        $.ajax({
+            url: '@Url.Action("KategoriEkle", "Kategori")',
+            method: 'POST',
+            data: { kategoriAd: kategoriAd },
+            success: function (response) {
+                // Başarılı ekleme
+                alert('Kategori başarıyla eklendi!');
+                $('#kategoriEkleModal').modal('hide');
+                location.reload(); // Sayfayı yenileyerek tabloyu güncelle
+            },
+            error: function (error) {
+                console.error("Kategori ekleme başarısız:", error);
+                alert('Kategori eklenirken bir hata oluştu.');
+            }
+        });
+    });
+});
 
     $(document).ready(function () {
         // Kart header'ına tıklandığında animasyonu başlatıyoruz
