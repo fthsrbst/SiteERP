@@ -23,6 +23,7 @@ namespace RestoranSiteV2.Models.Siniflar
         public decimal AlisFiyat { get; set; }
         public decimal SatisFiyat { get; set; }
         public bool Durum { get; set; }= true;
+        public string Aciklama { get; set; }
 
         [Column(TypeName = "Varchar")]
         [StringLength(250)]
@@ -32,5 +33,16 @@ namespace RestoranSiteV2.Models.Siniflar
         public virtual Kategori Kategori { get; set; }
 
         public ICollection<SatisHareket> SatisHarekets { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime EklenmeTarihi { get; set; } = DateTime.Now;
+
+
+        [NotMapped]
+        public string EklenmeTarihiFormatli => EklenmeTarihi.ToString("dd/MM/yyyy HH:mm");
+
+        
+        
+
     }
 }

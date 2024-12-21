@@ -15,6 +15,7 @@ namespace RestoranSiteV2.Controllers
 
         public ActionResult Index()
         {
+
             var urunler = c.Uruns.Where(x => x.Durum == true).ToList();
 
             // Populate ViewBag.Kategoriler
@@ -59,32 +60,62 @@ namespace RestoranSiteV2.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult UrunGetir(int id)
+        public ActionResult Detay(int id)
         {
-            var urundeger = c.Uruns.Find(id);
-            List<SelectListItem> deger1 = (from x in c.Kategoris.ToList()
-                                           select new SelectListItem
-                                           {
-                                               Text = x.KategoriAd,
-                                               Value = x.KategoriID.ToString()
-                                           }).ToList();
-            ViewBag.dgr1 = deger1;
-            return View("UrunGetir", urundeger);
+            var urun = c.Uruns.Include("Kategori").FirstOrDefault(x => x.Urunid == id);
+            if (urun == null)
+            {
+                return HttpNotFound();
+            }
+            return View(urun);
+        }
+        [HttpPost]
+        public ActionResult AciklamaEkle(int Urunid, string Aciklama)
+        {
+            var urun = c.Uruns.FirstOrDefault(x => x.Urunid == Urunid);
+            if (urun != null)
+            {
+                urun.Aciklama = Aciklama;
+                c.SaveChanges();
+            }
+            return RedirectToAction("Detay", new { id = Urunid });
         }
 
+
+        [HttpPost]
         public ActionResult UrunGuncelle(Urun p)
         {
+            if (p == null || p.Urunid == 0)
+            {
+                return Json(new { success = false, message = "Geçersiz ürün bilgisi." });
+            }
+
             var urn = c.Uruns.Find(p.Urunid);
-            urn.UrunAd = p.UrunAd;
-            urn.Marka = p.Marka;
-            urn.AlisFiyat = p.AlisFiyat;
-            urn.SatisFiyat = p.SatisFiyat;
-            urn.Stok = p.Stok;
-            urn.UrunGorsel = p.UrunGorsel;
-            urn.Kategoriid = p.Kategoriid;
-            c.SaveChanges();
-            return RedirectToAction("Index");
+            if (urn == null)
+            {
+                return Json(new { success = false, message = "Ürün bulunamadı." });
+            }
+
+            try
+            {
+                // Güncellemeler
+                urn.UrunAd = p.UrunAd;
+                urn.Marka = p.Marka;
+                urn.AlisFiyat = p.AlisFiyat;
+                urn.SatisFiyat = p.SatisFiyat;
+                urn.Stok = p.Stok;
+                urn.UrunGorsel = p.UrunGorsel;
+                urn.Kategoriid = p.Kategoriid;
+
+                c.SaveChanges();
+                return Json(new { success = true, message = "Ürün başarıyla güncellendi." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Bir hata oluştu: " + ex.Message });
+            }
         }
+
 
         public ActionResult ExcelExport()
         {

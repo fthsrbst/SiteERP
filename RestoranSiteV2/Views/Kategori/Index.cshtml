@@ -241,10 +241,9 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-
+                            <th>İşlemler</th>
                             <th>ID</th>
                             <th>Kategori Adı</th>
-                            <th>İşlemler</th>
 
                         </tr>
                     </thead>
@@ -252,10 +251,6 @@
                         @foreach (var k in Model)
                         {
                             <tr>
-
-
-                                <td>@k.KategoriID</td>
-                                <td>@k.KategoriAd</td>
                                 <td style="width: 50px;">
                                     <!-- Set the width to match the button size -->
                                     <div class="dropdown">
@@ -277,7 +272,8 @@
                                         </ul>
                                     </div>
                                 </td>
-
+                                <td>@k.KategoriID</td>
+                                <td>@k.KategoriAd</td>
                             </tr>
                         }
                     </tbody>

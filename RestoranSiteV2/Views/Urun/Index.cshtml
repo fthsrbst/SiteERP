@@ -219,22 +219,14 @@
             color: white;
         }
 </style>
-
-<!-- Bootstrap CSS -->
-
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
 <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
 <!-- FontAwesome for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-
-
-
 
 @if (TempData["AlertMessage"] != null)
 {
@@ -245,7 +237,6 @@
         </button>
     </div>
 }
-
 @if (TempData["excelMessage"] != null)
 {
     <div class="alert alert-success">
@@ -255,8 +246,6 @@
         </button>
     </div>
 }
-
-
 <div class="d-flex justify-content-between">
     <div class="card shadow mb-4">
         <div class="card-header py-3" data-expanded="false">
@@ -264,10 +253,8 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-
                 <!--<a href="/Urun/YeniUrun/" class="btn btn-primary">Yeni Ürün Ekle</a-->
                 <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#urunEkleModal">Yeni Ürün Ekle</a>
-
                 <!-- Sağ tarafa hizalanan "Yazdır" butonu -->
                 <div>
                     <label for="excelFileInput" class="btn btn-outline-warning">Excel Yükle</label>
@@ -278,36 +265,27 @@
                 </div>
                 <div id="popupMessage" style="display: none;" class="alert alert-info"></div>
             </div>
-
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="urunTablo">
                     <thead>
                         <tr>
-                            <th onclick="sortTable(0)"> ID</th>
-                            <th onclick="sortTable(1)">Ürün</th>
-                            <th onclick="sortTable(2)">Marka</th>
-                            <th onclick="sortTable(3)">Stok</th>
-                            <th onclick="sortTable(4)">Alış Fiyatı</th>
-                            <th onclick="sortTable(5)">Satış Fiyatı</th>
-                            <th onclick="sortTable(6)">Kategori</th>
-                            <th>Görsel</th>
                             <th>İşlemler</th>
+                            <th> ID</th>
+                            <th>Ürün</th>
+                            <th>Marka</th>
+                            <th>Kategori</th>
+                            <th>Görsel</th>
+                            <th>Stok</th>
+                            <th>Alış Fiyatı</th>
+                            <th>Satış Fiyatı</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var u in Model)
                         {
                             <tr>
-                                <td>@u.Urunid</td>
-                                <td>@u.UrunAd</td>
-                                <td>@u.Marka</td>
-                                <td>@u.Stok</td>
-                                <td>@u.AlisFiyat</td>
-                                <td>@u.SatisFiyat</td>
-                                <td>@u.Kategori.KategoriAd</td>
-                                <td><img src="@u.UrunGorsel" alt="Görsel" width="50" /></td>
                                 <td style="width: 50px;">
                                     <!-- İşlem menüsü dropdown -->
                                     <div class="dropdown">
@@ -315,6 +293,11 @@
                                             <i class="fas fa-bars"></i> <!-- Hamburger ikonu -->
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-@u.Urunid">
+                                            <li>
+                                                <a class="dropdown-item" href="/Urun/Detay/@u.Urunid">
+                                                    <i class="fas fa-info-circle"></i> Detay
+                                                </a>
+                                            </li>
                                             <li>
                                                 <a class="dropdown-item" href="/Urun/UrunGetir/@u.Urunid">
                                                     <i class="fas fa-edit"></i> Güncelle
@@ -325,13 +308,20 @@
                                                     <i class="fas fa-trash"></i> Sil
                                                 </a>
                                             </li>
+
                                         </ul>
                                     </div>
                                 </td>
+                                <td>@u.Urunid</td>
+                                <td>@u.UrunAd</td>
+                                <td>@u.Marka</td>
+                                <td>@u.Kategori.KategoriAd</td>
+                                <td><img src="@u.UrunGorsel" alt="Görsel" width="50" /></td>
+                                <td>@u.Stok</td>
+                                <td>@u.AlisFiyat</td>
+                                <td>@u.SatisFiyat</td>
                             </tr>
-
                         }
-
                     </tbody>
                 </table>
             </div>
@@ -356,38 +346,23 @@
         </div>
     </div>
 </div>
-
-
-
-
 <div class="modal fade" id="urunEkleModal" tabindex="-1" role="dialog" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="color:white;" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
-                
             </div>
             <div class="modal-body">
                 <form id="urunEkleForm">
-                    <div class="form-group">
-                        <label for="urunAd">Ürün Adı</label>
-                        <input type="text" class="form-control" id="urunAd" name="UrunAd" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="marka">Marka</label>
-                        <input type="text" class="form-control" id="marka" name="Marka" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="stok">Stok</label>
-                        <input type="number" class="form-control" id="stok" name="Stok" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="alisFiyat">Alış Fiyatı</label>
-                        <input type="number" step="0.01" class="form-control" id="alisFiyat" name="AlisFiyat" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="satisFiyat">Satış Fiyatı</label>
-                        <input type="number" step="0.01" class="form-control" id="satisFiyat" name="SatisFiyat" required>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="urunAd">Ürün Adı</label>
+                            <input type="text" class="form-control" id="urunAd" name="UrunAd" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="marka">Marka</label>
+                            <input type="text" class="form-control" id="marka" name="Marka" required>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="kategori">Kategori</label>
@@ -400,13 +375,28 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="stok">Stok</label>
+                        <input type="number" class="form-control" id="stok" name="Stok" required>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="alisFiyat">Alış Fiyatı</label>
+                            <input type="number" step="0.01" class="form-control" id="alisFiyat" name="AlisFiyat" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="satisFiyat">Satış Fiyatı</label>
+                            <input type="number" step="0.01" class="form-control" id="satisFiyat" name="SatisFiyat" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="urunGorsel">Ürün Görseli</label>
                         <input type="text" class="form-control" id="urunGorsel" name="UrunGorsel">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" style="margin-right:5px;" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
                 <button type="button" id="urunEkleSubmit" class="btn btn-primary">Kaydet</button>
             </div>
         </div>

@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Detay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Detay Sayfası -->
+<div class="container mt-5">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Ürün Detayları</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Sol Tarafta Görsel -->
+                <div class="col-md-4 text-center">
+                    <img src="@Model.UrunGorsel" alt="@Model.UrunAd" class="img-fluid rounded">
+                </div>
+
+                <!-- Sağ Tarafta Bilgiler -->
+                <div class="col-md-8">
+                    <h3>@Model.UrunAd</h3>
+                    <p><strong>Marka:</strong> @Model.Marka</p>
+                    <p><strong>Kategori:</strong> @Model.Kategori.KategoriAd</p>
+                    <p><strong>Stok:</strong> @Model.Stok</p>
+                    <p><strong>Alış Fiyatı:</strong> @Model.AlisFiyat</p>
+                    <p><strong>Satış Fiyatı:</strong> @Model.SatisFiyat</p>
+                    <p><strong>Eklenme Tarihi:</strong> @Model.EklenmeTarihi.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Açıklama Ekleme Bölümü -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Açıklama Ekle</h6>
+        </div>
+        <div class="card-body">
+            <form method="post" action="/Urun/AciklamaEkle">
+                <div class="form-group">
+                    <textarea class="form-control" name="Aciklama" rows="4" placeholder="Ürünle ilgili açıklama girin..." required></textarea>
+                </div>
+                <input type="hidden" name="Urunid" value="@Model.Urunid">
+                <button type="submit" class="btn btn-primary mt-2">Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>

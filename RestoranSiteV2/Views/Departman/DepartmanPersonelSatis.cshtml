@@ -4,71 +4,292 @@
     ViewBag.Title = "DepartmanPersonelSatis";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<br />
-<h2>Departman Personel Satış</h2>
-<br />
-<h1 class="h3 mb-2 text-gray-800">Personel Adı : @ViewBag.dpers</h1>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+    /* CSS to fix the popup and prevent shifting */
+    #popupModal {
+        position: fixed;
+        top: 20px; /* Adjust the position if needed */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050; /* Make sure it is on top of other elements */
+    }
+
+    #excelExportButton {
+        position: relative;
+        z-index: 10; /* Ensure the button stays above background elements */
+    }
+
+    .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: none;
+        position: relative;
+        padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
+    }
+
+        .modal-header .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background-color: #fff; /* Butonun arka planını beyaz yap */
+            border-radius: 50%; /* Yuvarlak görünüm */
+            border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+            .modal-header .btn-close:hover {
+                background-color: #f8f9fa; /* Hover sırasında açık gri */
+                border-color: #ccc; /* Kenarlık rengini açık gri yap */
+            }
+
+            .modal-header .btn-close::before {
+                content: '×'; /* Çarpı sembolü */
+                font-size: 20px;
+                font-weight: bold;
+                color: #4e73df; /* Gradient ile uyumlu renk */
+            }
+
+    .modal-footer {
+        border-top: none;
+    }
+
+    .modal-body input {
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    .modal-footer .btn {
+        border-radius: 10px;
+        font-weight: bold;
+        padding: 10px 20px;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #ddd;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+    }
+
+    #departmanChart {
+        position: relative; /* Ensure it has a positioning context */
+        z-index: 10; /* Set a higher z-index */
+        transition: none;
+    }
+
+    table.dataTable th,
+    table.dataTable td {
+        border: none !important; /* Kenarlıkları kaldır */
+    }
 
 
-<!-- DataTables CSS -->
-<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    .dropdown-menu i {
+        margin-right: 8px; /* Add some space between icon and text */
+    }
+
+    .dropdown-menu .dropdown-item {
+        display: flex; /* Align the icon and text horizontally */
+        align-items: center;
+    }
+
+    .card {
+        z-index: 1;
+        margin: 20px;
+        border-radius: 15px; /* Köşeleri yuvarla */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge ekle */
+        transition: width 0.3s ease, border-radius 0.3s ease; /* Transition for width and border-radius */
+        overflow: hidden; /* Prevent content overflow during animation */
+        position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
+        width: 100%; /* Kartın başlangıç genişliği */
+    }
+
+        .card.expanded {
+            width: 100%; /* Kart tamamen genişlesin */
+            z-index: 10; /* Diğer kartların üstünde olmasını sağlamak için z-index ekliyoruz */
+        }
+
+    .card-body {
+        margin-top: 20px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        overflow: visible;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a); /* Gradient arka plan */
+        color: #fff;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+    }
+
+        .card-header .text-primary {
+            color: white !important; /* Yazı rengi beyaz olacak */
+        }
+
+    .btn {
+        border-radius: 8px; /* Buton köşelerini yuvarla */
+        font-weight: bold;
+        transition: all 0.3s ease; /* Hover geçişi */
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    .btn-outline-success:hover {
+        background-color: #1cc88a;
+        color: white;
+    }
+
+
+
+    /* Buton stilleri */
+    a.btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        a.btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    a.btn-outline-success {
+        border-color: #1cc88a;
+        color: #1cc88a;
+    }
+
+        a.btn-outline-success:hover {
+            background-color: #1cc88a;
+            color: white;
+        }
+
+    a.btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+
+        a.btn-outline-primary:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+    a.btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+
+        a.btn-outline-danger:hover {
+            background-color: #e74a3b;
+            color: white;
+        }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+
+<link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+<!-- FontAwesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 <!-- DataTales Example -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Departman Tablosu</h6>
-    </div>
-    <div class="card-body">
-        
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Satış ID</th>
-                        <th>Ürün</th>
-                        <th>Müşteri</th>
-                        <th>Fiyat</th>
-                        <th>Adet</th>
-                        <th>Toplam</th>
-                        <th>Tarih</th>
-                        <th>Yazdır</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var x in Model)
-                    {
+<div class="d-flex justify-content-between">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3" data-expanded="false">
+            <h6 class="m-0 font-weight-bold text-primary">Personel Adı : @ViewBag.dpers</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
                         <tr>
-                            <td>@x.Satisid</td>
-                            <td>@x.Urun.UrunAd</td>
-                            <td>@x.Cariler.CariAd+@x.Cariler.CariSoyad</td>
-                            <td>@x.Fiyat</td>
-                            <td>@x.Adet</td>
-                            <td>@x.ToplamTutar</td>
-                            <td>@x.Tarih</td>
-                            <td><a href="#" class="btn btn-outline-success">Yazdır</a></td>
-                          
+                            <th>Satış ID</th>
+                            <th>Ürün</th>
+                            <th>Müşteri</th>
+                            <th>Fiyat</th>
+                            <th>Adet</th>
+                            <th>Toplam</th>
+                            <th>Tarih</th>
+                            <th>Yazdır</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in Model)
+                        {
+                            <tr>
+                                <td>@x.Satisid</td>
+                                <td>@x.Urun.UrunAd</td>
+                                <td>@x.Cariler.CariAd+@x.Cariler.CariSoyad</td>
+                                <td>@x.Fiyat</td>
+                                <td>@x.Adet</td>
+                                <td>@x.ToplamTutar</td>
+                                <td>@x.Tarih</td>
+                                <td><a href="#" class="btn btn-outline-success">Yazdır</a></td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+<div/>
 
 
-<script>$('#dataTable').DataTable({
-        "language": {
-            "search": "Ara:",
-            "lengthMenu": "Her sayfada _MENU_ kayıt göster",
-            "zeroRecords": "Eşleşen kayıt bulunamadı",
-            "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
-            "infoEmpty": "Kayıt yok",
-            "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
-            "paginate": {
-                "first": "İlk",
-                "last": "Son",
-                "next": "Sonraki",
-                "previous": "Önceki"
+
+    <script>
+        $('#dataTable').DataTable({
+            "language": {
+                "search": "Ara:",
+                "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+                "zeroRecords": "Eşleşen kayıt bulunamadı",
+                "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
+                "infoEmpty": "Kayıt yok",
+                "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
+                "paginate": {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "Sonraki",
+                    "previous": "Önceki"
+                }
             }
-        }
-    });</script>
+        });</script>

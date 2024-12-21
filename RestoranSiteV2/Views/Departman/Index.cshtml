@@ -251,38 +251,36 @@
                     <table class="table table-bordered" id="dataTable">
                         <thead>
                             <tr>
+                                <th>İşlemler</th>
                                 <th>ID</th>
                                 <th>Departman Adı</th>
-                                <th>İşlemler</th>
-
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var k in Model)
                             {
                                 <tr>
-                                    <td>@k.Departmanid</td>
-                                    <td>@k.DepartmanAd</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-bars"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a href="/Departman/DepartmanDetay/@k.Departmanid" class="dropdown-item">
+                                                    <i class="fas fa-info-circle text-dark"></i> Detay
+                                                </a>
                                                 <a href="/Departman/DepartmanGetir/@k.Departmanid" class="dropdown-item">
                                                     <i class="fas fa-edit text-primary"></i> Güncelle
                                                 </a>
                                                 <a href="/Departman/DepartmanSil/@k.Departmanid" class="dropdown-item">
                                                     <i class="fas fa-trash text-danger"></i> Sil
                                                 </a>
-                                                <a href="/Departman/DepartmanDetay/@k.Departmanid" class="dropdown-item">
-                                                    <i class="fas fa-info-circle text-dark"></i> Detay
-                                                </a>
+
                                             </div>
                                         </div>
                                     </td>
-
-
+                                    <td>@k.Departmanid</td>
+                                    <td>@k.DepartmanAd</td>
                                 </tr>
                             }
                         </tbody>
