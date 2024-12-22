@@ -13,16 +13,69 @@ namespace RestoranSiteV2.Controllers
     {
         Context c = new Context();
 
-        public ActionResult Index()
+        public ActionResult Index(string marka, int? kategoriId, DateTime? startDate, DateTime? endDate,
+                          int? minStock, int? maxStock, decimal? minAlisFiyat, decimal? maxAlisFiyat,
+                          decimal? minSatisFiyat, decimal? maxSatisFiyat)
         {
+            // Tüm ürünleri çek
+            var urunler = c.Uruns.Include("Kategori").Where(x => x.Durum == true).AsQueryable();
 
-            var urunler = c.Uruns.Where(x => x.Durum == true).ToList();
+            // Filtreleme işlemleri
+            if (!string.IsNullOrEmpty(marka))
+            {
+                urunler = urunler.Where(x => x.Marka.Contains(marka));
+            }
 
-            // Populate ViewBag.Kategoriler
-            ViewBag.Kategoriler = c.Kategoris.ToList(); // Assuming 'Kategoriler' is the correct collection
+            if (kategoriId.HasValue)
+            {
+                urunler = urunler.Where(x => x.Kategoriid == kategoriId.Value);
+            }
 
-            return View(urunler);
+            if (startDate.HasValue)
+            {
+                urunler = urunler.Where(x => x.EklenmeTarihi >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                urunler = urunler.Where(x => x.EklenmeTarihi <= endDate.Value);
+            }
+
+            if (minStock.HasValue)
+            {
+                urunler = urunler.Where(x => x.Stok >= minStock.Value);
+            }
+
+            if (maxStock.HasValue)
+            {
+                urunler = urunler.Where(x => x.Stok <= maxStock.Value);
+            }
+
+            if (minAlisFiyat.HasValue)
+            {
+                urunler = urunler.Where(x => x.AlisFiyat >= minAlisFiyat.Value);
+            }
+
+            if (maxAlisFiyat.HasValue)
+            {
+                urunler = urunler.Where(x => x.AlisFiyat <= maxAlisFiyat.Value);
+            }
+
+            if (minSatisFiyat.HasValue)
+            {
+                urunler = urunler.Where(x => x.SatisFiyat >= minSatisFiyat.Value);
+            }
+
+            if (maxSatisFiyat.HasValue)
+            {
+                urunler = urunler.Where(x => x.SatisFiyat <= maxSatisFiyat.Value);
+            }
+
+            // Filtrelenmiş listeyi gönder
+            ViewBag.Kategoriler = c.Kategoris.ToList(); // Kategoriler dropdown için
+            return View(urunler.ToList());
         }
+
 
 
         [HttpGet]
@@ -82,39 +135,36 @@ namespace RestoranSiteV2.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult UrunGuncelle(Urun p)
+        // Controller'da UrunGetir methodu
+        public ActionResult UrunGetir(int id)
         {
-            if (p == null || p.Urunid == 0)
+            var urun = c.Uruns
+                .Where(u => u.Urunid == id)
+                .Select(u => new
+                {
+                    Urunid = u.Urunid,
+                    UrunAd = u.UrunAd,
+                    Marka = u.Marka,
+                    Stok = u.Stok,
+                    AlisFiyat = u.AlisFiyat,
+                    SatisFiyat = u.SatisFiyat,
+                    UrunGorsel = u.UrunGorsel,
+                    Kategoriid = u.Kategoriid,
+                    Aciklama = u.Aciklama,
+                    Durum = u.Durum,
+                    EklenmeTarihi = u.EklenmeTarihi
+                })
+                .FirstOrDefault();
+
+            if (urun == null)
             {
-                return Json(new { success = false, message = "Geçersiz ürün bilgisi." });
+                return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            var urn = c.Uruns.Find(p.Urunid);
-            if (urn == null)
-            {
-                return Json(new { success = false, message = "Ürün bulunamadı." });
-            }
-
-            try
-            {
-                // Güncellemeler
-                urn.UrunAd = p.UrunAd;
-                urn.Marka = p.Marka;
-                urn.AlisFiyat = p.AlisFiyat;
-                urn.SatisFiyat = p.SatisFiyat;
-                urn.Stok = p.Stok;
-                urn.UrunGorsel = p.UrunGorsel;
-                urn.Kategoriid = p.Kategoriid;
-
-                c.SaveChanges();
-                return Json(new { success = true, message = "Ürün başarıyla güncellendi." });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Bir hata oluştu: " + ex.Message });
-            }
+            return Json(urun, JsonRequestBehavior.AllowGet);
         }
+
+
 
 
         public ActionResult ExcelExport()
@@ -217,5 +267,9 @@ namespace RestoranSiteV2.Controllers
             }
         }
 
+
+
     }
+
+
 }
