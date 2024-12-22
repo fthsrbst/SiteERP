@@ -3,549 +3,369 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!-- Content wrapper -->
-<div class="content-wrapper">
-    <!-- Content -->
+<style>
 
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="row">
-            <div class="col-xxl-8 mb-6 order-0">
-                <div class="card">
-                    <div class="d-flex align-items-start row">
-                        <div class="col-sm-7">
-                            <div class="card-body">
-                                <h5 class="card-title text-primary mb-3">Merhaba Fatih! 🎉</h5>
-                                <p class="mb-6">
-                                    Bugün umarız keyfin yerindedir.<br />Harika bir gün seni bekliyor.
-                                </p>
+    .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
 
-                                <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
-                            </div>
-                        </div>
-                        <div class="col-sm-5 text-center text-sm-left">
-                            <div class="card-body pb-0 px-0 px-md-6">
-                                <img src="~/Template/assets/img/illustrations/man-with-laptop.png"
-                                     height="175"
-                                     class="scaleX-n1-rtl"
-                                     alt="View Badge User" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 order-1">
-                <div class="row">
-                    <div class="col-lg-6 col-md-12 col-6 mb-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/Template/assets/img/icons/unicons/chart-success.png"
-                                             alt="chart success"
-                                             class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt3"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="bx bx-dots-vertical-rounded text-muted"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="mb-1">Profit</p>
-                                <h4 class="card-title mb-3">$12,628</h4>
-                                <small class="text-success fw-medium"><i class="bx bx-up-arrow-alt"></i> +72.80%</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-12 col-6 mb-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/Template/assets/img/icons/unicons/wallet-info.png"
-                                             alt="wallet info"
-                                             class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt6"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="bx bx-dots-vertical-rounded text-muted"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="mb-1">Sales</p>
-                                <h4 class="card-title mb-3">$4,679</h4>
-                                <small class="text-success fw-medium"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Total Revenue -->
-            <div class="col-12 col-xxl-8 order-2 order-md-3 order-xxl-2 mb-6">
-                <div class="card">
-                    <div class="row row-bordered g-0">
-                        <div class="col-lg-8">
-                            <div class="card-header d-flex align-items-center justify-content-between">
-                                <div class="card-title mb-0">
-                                    <h5 class="m-0 me-2">Total Revenue</h5>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0"
-                                            type="button"
-                                            id="totalRevenue"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded bx-lg text-muted"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="totalRevenue">
-                                        <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="totalRevenueChart" class="px-3"></div>
-                        </div>
-                        <div class="col-lg-4 d-flex align-items-center">
-                            <div class="card-body px-xl-9">
-                                <div class="text-center mb-6">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-outline-primary">
-                                            <script>
-                                                document.write(new Date().getFullYear() - 1);
-                                            </script>
-                                        </button>
-                                        <button type="button"
-                                                class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="javascript:void(0);">2021</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);">2020</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);">2019</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+    .modal-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: none;
+        position: relative;
+        padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
+    }
 
-                                <div id="growthChart"></div>
-                                <div class="text-center fw-medium my-6">62% Company Growth</div>
+        .modal-header .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background-color: #fff; /* Butonun arka planını beyaz yap */
+            border-radius: 50%; /* Yuvarlak görünüm */
+            border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
 
-                                <div class="d-flex gap-3 justify-content-between">
-                                    <div class="d-flex">
-                                        <div class="avatar me-2">
-                                            <span class="avatar-initial rounded-2 bg-label-primary">
-                                                <i class="bx bx-dollar bx-lg text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <small>
-                                                <script>
-                                                    document.write(new Date().getFullYear() - 1);
-                                                </script>
-                                            </small>
-                                            <h6 class="mb-0">$32.5k</h6>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="avatar me-2">
-                                            <span class="avatar-initial rounded-2 bg-label-info">
-                                                <i class="bx bx-wallet bx-lg text-info"></i>
-                                            </span>
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <small>
-                                                <script>
-                                                    document.write(new Date().getFullYear() - 2);
-                                                </script>
-                                            </small>
-                                            <h6 class="mb-0">$41.2k</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            .modal-header .btn-close:hover {
+                background-color: #f8f9fa; /* Hover sırasında açık gri */
+                border-color: #ccc; /* Kenarlık rengini açık gri yap */
+            }
+
+            .modal-header .btn-close::before {
+                content: '×'; /* Çarpı sembolü */
+                font-size: 20px;
+                font-weight: bold;
+                color: #4e73df; /* Gradient ile uyumlu renk */
+            }
+
+    .modal-footer {
+        border-top: none;
+    }
+
+    .modal-body input {
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    .modal-footer .btn {
+        border-radius: 10px;
+        font-weight: bold;
+        padding: 10px 20px;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #ddd;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+    }
+
+    #kategoriChart {
+        position: relative; /* Ensure it has a positioning context */
+        z-index: 10; /* Set a higher z-index */
+        transition: none;
+    }
+
+    table.dataTable th,
+    table.dataTable td {
+        border: none !important; /* Kenarlıkları kaldır */
+    }
+
+
+
+    .dropdown-menu i {
+        margin-right: 8px; /* Add some space between icon and text */
+    }
+
+    .dropdown-menu .dropdown-item {
+        display: flex; /* Align the icon and text horizontally */
+        align-items: center;
+    }
+
+    .card {
+        z-index: 1;
+        margin: 20px;
+        border-radius: 15px; /* Köşeleri yuvarla */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge ekle */
+        transition: width 0.3s ease, border-radius 0.3s ease; /* Transition for width and border-radius */
+        overflow: hidden; /* Prevent content overflow during animation */
+        position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
+        /* Kartın başlangıç genişliği */
+    }
+
+        .card.expanded {
+            width: 100%; /* Kart tamamen genişlesin */
+            z-index: 10; /* Diğer kartların üstünde olmasını sağlamak için z-index ekliyoruz */
+        }
+
+    .card-body {
+        margin-top: 20px;
+        overflow: visible;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a); /* Gradient arka plan */
+        color: #fff;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+    }
+
+        .card-header .text-primary {
+            color: white !important; /* Yazı rengi beyaz olacak */
+        }
+
+    .btn {
+        border-radius: 8px; /* Buton köşelerini yuvarla */
+        font-weight: bold;
+        transition: all 0.3s ease; /* Hover geçişi */
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    .btn-outline-success:hover {
+        background-color: #1cc88a;
+        color: white;
+    }
+
+
+
+    /* Buton stilleri */
+    a.btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        a.btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    a.btn-outline-success {
+        border-color: #1cc88a;
+        color: #1cc88a;
+    }
+
+        a.btn-outline-success:hover {
+            background-color: #1cc88a;
+            color: white;
+        }
+
+    a.btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+
+        a.btn-outline-primary:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+    a.btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+
+        a.btn-outline-danger:hover {
+            background-color: #e74a3b;
+            color: white;
+        }
+</style>
+<div class="d-flex ">
+
+    <!-- Ürün Sayıları Kartı -->
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <!-- Grafik -->
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Urun/Index" style="text-decoration: none;">
+                <!-- Yönlendirme linkini buraya ekliyoruz -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Ürün Sayıları</h6>
                 </div>
-            </div>
-            <!--/ Total Revenue -->
-            <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2">
-                <div class="row">
-                    <div class="col-6 mb-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/Template/assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt4"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="bx bx-dots-vertical-rounded text-muted"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="mb-1">Payments</p>
-                                <h4 class="card-title mb-3">$2,456</h4>
-                                <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -14.82%</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 mb-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/Template/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt1"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="bx bx-dots-vertical-rounded text-muted"></i>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="mb-1">Transactions</p>
-                                <h4 class="card-title mb-3">$14,857</h4>
-                                <small class="text-success fw-medium"><i class="bx bx-up-arrow-alt"></i> +28.14%</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 mb-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center flex-sm-row flex-column gap-10">
-                                    <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
-                                        <div class="card-title mb-6">
-                                            <h5 class="text-nowrap mb-1">Profile Report</h5>
-                                            <span class="badge bg-label-warning">YEAR 2022</span>
-                                        </div>
-                                        <div class="mt-sm-auto">
-                                            <span class="text-success text-nowrap fw-medium"><i class="bx bx-up-arrow-alt"></i> 68.2%</span>
-                                            <h4 class="mb-0">$84,686k</h4>
-                                        </div>
-                                    </div>
-                                    <div id="profileReportChart"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Toplam Ürün</h5>
+                    <h3 class="text-primary fw-bold">@ViewBag.TotalProducts</h3>
+                    <i class="bi bi-box-seam fs-1 text-primary"></i>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Order Statistics -->
-            <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-6">
-                <div class="card h-100">
-                    <div class="card-header d-flex justify-content-between">
-                        <div class="card-title mb-0">
-                            <h5 class="mb-1 me-2">Order Statistics</h5>
-                            <p class="card-subtitle">42.82k Total Sales</p>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn text-muted p-0"
-                                    type="button"
-                                    id="orederStatistics"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
-                                <i class="bx bx-dots-vertical-rounded bx-lg"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
-                                <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-6">
-                            <div class="d-flex flex-column align-items-center gap-1">
-                                <h3 class="mb-1">8,258</h3>
-                                <small>Total Orders</small>
-                            </div>
-                            <div id="orderStatisticsChart"></div>
-                        </div>
-                        <ul class="p-0 m-0">
-                            <li class="d-flex align-items-center mb-5">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="bx bx-mobile-alt"></i>
-                                    </span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0">Electronic</h6>
-                                        <small>Mobile, Earbuds, TV</small>
-                                    </div>
-                                    <div class="user-progress">
-                                        <h6 class="mb-0">82.5k</h6>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center mb-5">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0">Fashion</h6>
-                                        <small>T-shirt, Jeans, Shoes</small>
-                                    </div>
-                                    <div class="user-progress">
-                                        <h6 class="mb-0">23.8k</h6>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center mb-5">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0">Decor</h6>
-                                        <small>Fine Art, Dining</small>
-                                    </div>
-                                    <div class="user-progress">
-                                        <h6 class="mb-0">849k</h6>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-secondary">
-                                        <i class="bx bx-football"></i>
-                                    </span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0">Sports</h6>
-                                        <small>Football, Cricket Kit</small>
-                                    </div>
-                                    <div class="user-progress">
-                                        <h6 class="mb-0">99</h6>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--/ Order Statistics -->
-            <!-- Expense Overview -->
-            <div class="col-md-6 col-lg-4 order-1 mb-6">
-                <div class="card h-100">
-                    <div class="card-header nav-align-top">
-                        <ul class="nav nav-pills" role="tablist">
-                            <li class="nav-item">
-                                <button type="button"
-                                        class="nav-link active"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-tabs-line-card-income"
-                                        aria-controls="navs-tabs-line-card-income"
-                                        aria-selected="true">
-                                    Income
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="nav-link" role="tab">Expenses</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="nav-link" role="tab">Profit</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content p-0">
-                            <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
-                                <div class="d-flex mb-6">
-                                    <div class="avatar flex-shrink-0 me-3">
-                                        <img src="~/Template/assets/img/icons/unicons/wallet.png" alt="User" />
-                                    </div>
-                                    <div>
-                                        <p class="mb-0">Total Balance</p>
-                                        <div class="d-flex align-items-center">
-                                            <h6 class="mb-0 me-1">$459.10</h6>
-                                            <small class="text-success fw-medium">
-                                                <i class="bx bx-chevron-up bx-lg"></i>
-                                                42.9%
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="incomeChart"></div>
-                                <div class="d-flex align-items-center justify-content-center mt-6 gap-3">
-                                    <div class="flex-shrink-0">
-                                        <div id="expensesOfWeek"></div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Income this week</h6>
-                                        <small>$39k less than last week</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/ Expense Overview -->
-            <!-- Transactions -->
-            <div class="col-md-6 col-lg-4 order-2 mb-6">
-                <div class="card h-100">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">Transactions</h5>
-                        <div class="dropdown">
-                            <button class="btn text-muted p-0"
-                                    type="button"
-                                    id="transactionID"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
-                                <i class="bx bx-dots-vertical-rounded bx-lg"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
-                                <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body pt-4">
-                        <ul class="p-0 m-0">
-                            <li class="d-flex align-items-center mb-6">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="~/Template/assets/img/icons/unicons/paypal.png" alt="User" class="rounded" />
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="d-block">Paypal</small>
-                                        <h6 class="fw-normal mb-0">Send money</h6>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center gap-2">
-                                        <h6 class="fw-normal mb-0">+82.6</h6>
-                                        <span class="text-muted">USD</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center mb-6">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="~/Template/assets/img/icons/unicons/wallet.png" alt="User" class="rounded" />
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="d-block">Wallet</small>
-                                        <h6 class="fw-normal mb-0">Mac'D</h6>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center gap-2">
-                                        <h6 class="fw-normal mb-0">+270.69</h6>
-                                        <span class="text-muted">USD</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center mb-6">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="~/Template/assets/img/icons/unicons/chart.png" alt="User" class="rounded" />
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="d-block">Transfer</small>
-                                        <h6 class="fw-normal mb-0">Refund</h6>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center gap-2">
-                                        <h6 class="fw-normal mb-0">+637.91</h6>
-                                        <span class="text-muted">USD</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center mb-6">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="~/Template/assets/img/icons/unicons/cc-primary.png" alt="User" class="rounded" />
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="d-block">Credit Card</small>
-                                        <h6 class="fw-normal mb-0">Ordered Food</h6>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center gap-2">
-                                        <h6 class="fw-normal mb-0">-838.71</h6>
-                                        <span class="text-muted">USD</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center mb-6">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="~/Template/assets/img/icons/unicons/wallet.png" alt="User" class="rounded" />
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="d-block">Wallet</small>
-                                        <h6 class="fw-normal mb-0">Starbucks</h6>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center gap-2">
-                                        <h6 class="fw-normal mb-0">+203.33</h6>
-                                        <span class="text-muted">USD</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-center">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="~/Template/assets/img/icons/unicons/cc-warning.png" alt="User" class="rounded" />
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="d-block">Mastercard</small>
-                                        <h6 class="fw-normal mb-0">Ordered Food</h6>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center gap-2">
-                                        <h6 class="fw-normal mb-0">-92.45</h6>
-                                        <span class="text-muted">USD</span>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--/ Transactions -->
+            </a>
         </div>
     </div>
-   
-    <div class="content-backdrop fade"></div>
+
+    <!-- Kategori Sayıları Kartı -->
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <!-- Grafik -->
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Kategori/Index" style="text-decoration: none;">
+                <!-- Yönlendirme linkini buraya ekliyoruz -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Kategori Sayıları</h6>
+                </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Toplam Kategori</h5>
+                    <h3 class="text-success fw-bold">@ViewBag.TotalCategories</h3>
+                    <i class="bi bi-tags fs-1 text-success"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Departman Sayıları Kartı -->
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <!-- Grafik -->
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Departman/Index" style="text-decoration: none;">
+                <!-- Yönlendirme linkini buraya ekliyoruz -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Departman Sayıları</h6>
+                </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Toplam Departman</h5>
+                    <h3 class="text-info fw-bold">@ViewBag.TotalDepartments</h3>
+                    <i class="bi bi-people fs-1 text-info"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
 </div>
-<!-- Content wrapper -->
+
+<!-- Grafikler -->
+<div class="row" style="margin-top:-20px;">
+    <!-- Küçük Kategori Bazlı Ürünler Kartı -->
+    <div class="col-md-4">
+        <a href="/Urun/Index" style="text-decoration: none;">
+            <!-- Yönlendirme linkini buraya ekliyoruz -->
+            <div class="card shadow-sm border-0 mb-4" style="height: 430px; width:87%">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Kategori Bazlı Ürünler</h6>
+                </div>
+                <div class="card-body" style="text-align: center;">
+                    <canvas id="categoryChart" style="max-height: 400px;"></canvas>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Aylık Satış Verileri Kartı -->
+    <div class="col-md-6" >
+        <a href="/Kategori/Index" style="text-decoration: none;">
+            <!-- Yönlendirme linkini buraya ekliyoruz -->
+            <div class="card shadow-sm border-0 mb-4"  style="height: 430px;" >
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Aylık Satış Verileri</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+
+
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- FontAwesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Kategori Bazlı Ürün Grafiği
+    const categoryData = JSON.parse('@Html.Raw(ViewBag.CategoryDataJson)');
+    const categoryChartData = {
+        labels: categoryData.map(c => c.CategoryName),
+        datasets: [{
+            data: categoryData.map(c => c.ProductCount),
+            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+            hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#f4b619', '#e02d1b']
+        }]
+    };
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: categoryChartData,
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 15
+                    }
+                }
+            }
+        }
+    });
+
+    // Aylık Satış Grafiği
+    const salesData = JSON.parse('@Html.Raw(ViewBag.SalesDataJson)');
+    const salesChartData = {
+        labels: salesData.map(s => s.MonthName),
+        datasets: [{
+            label: 'Toplam Satış',
+            data: salesData.map(s => s.TotalSales),
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.2)',
+            borderWidth: 2,
+            tension: 0.4
+        }]
+    };
+    new Chart(document.getElementById('salesChart'), {
+        type: 'line',
+        data: salesChartData,
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Aylar'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Satış (₺)'
+                    }
+                }
+            }
+        }
+    });
+</script>
