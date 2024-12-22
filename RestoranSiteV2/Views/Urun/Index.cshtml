@@ -252,10 +252,66 @@
             <h6 class="m-0 font-weight-bold text-primary">Ürünler Tablosu</h6>
         </div>
         <div class="card-body">
+            <div class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="filterBrand">Marka</label>
+                        <select id="filterBrand" class="form-control">
+                            <option value="">Tümü</option>
+                            @foreach (var brand in Model.Select(m => m.Marka).Distinct())
+                            {
+                                <option value="@brand">@brand</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="filterCategory">Kategori</label>
+                        <select id="filterCategory" class="form-control">
+                            <option value="">Tümü</option>
+                            @foreach (var category in Model.Select(m => m.Kategori.KategoriAd).Distinct())
+                            {
+                                <option value="@category">@category</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="startDate">Başlangıç Tarihi</label>
+                        <input type="date" id="startDate" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="endDate">Bitiş Tarihi</label>
+                        <input type="date" id="endDate" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Stok Aralığı</label>
+                        <div class="input-group">
+                            <input type="number" id="minStock" class="form-control" placeholder="Min" min="0" />
+                            <input type="number" id="maxStock" class="form-control" placeholder="Max" min="0" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Alış Fiyatı</label>
+                        <div class="input-group">
+                            <input type="number" id="minPurchasePrice" class="form-control" placeholder="Min ₺" min="0" />
+                            <input type="number" id="maxPurchasePrice" class="form-control" placeholder="Max ₺" min="0" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Satış Fiyatı</label>
+                        <div class="input-group">
+                            <input type="number" id="minSalePrice" class="form-control" placeholder="Min ₺" min="0" />
+                            <input type="number" id="maxSalePrice" class="form-control" placeholder="Max ₺" min="0" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 align-self-end">
+                        <button id="applyFilters" class="btn btn-primary mt-3">Filtrele</button>
+                        <button id="resetFilters" class="btn btn-secondary mt-3">Sıfırla</button>
+                    </div>
+                </div>
+            </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <!--<a href="/Urun/YeniUrun/" class="btn btn-primary">Yeni Ürün Ekle</a-->
+               
                 <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#urunEkleModal">Yeni Ürün Ekle</a>
-                <!-- Sağ tarafa hizalanan "Yazdır" butonu -->
                 <div>
                     <label for="excelFileInput" class="btn btn-outline-warning">Excel Yükle</label>
                     <input type="file" id="excelFileInput" style="display:none;" />
@@ -277,6 +333,7 @@
                             <th>Marka</th>
                             <th>Kategori</th>
                             <th>Görsel</th>
+                            <th>Eklenme Tarihi</th>
                             <th>Stok</th>
                             <th>Alış Fiyatı</th>
                             <th>Satış Fiyatı</th>
@@ -317,6 +374,7 @@
                                 <td>@u.Marka</td>
                                 <td>@u.Kategori.KategoriAd</td>
                                 <td><img src="@u.UrunGorsel" alt="Görsel" width="50" /></td>
+                                <td>@u.EklenmeTarihi</td>
                                 <td>@u.Stok</td>
                                 <td>@u.AlisFiyat</td>
                                 <td>@u.SatisFiyat</td>
@@ -418,7 +476,8 @@
                 "next": "Sonraki",
                 "previous": "Önceki"
             }
-        }
+        },
+        "lengthMenu": [5, 10, 25, 50, 100]
     });
 
 
@@ -427,6 +486,75 @@
             $(this).remove();
         });
     }, 3000); // 3000 ms = 3 saniye
+
+
+
+
+
+
+
+    $(document).ready(function () {
+        const table = $('#urunTablo').DataTable();
+
+        $('#applyFilters').click(function () {
+            const brand = $('#filterBrand').val();
+            const category = $('#filterCategory').val();
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
+            const minStock = $('#minStock').val();
+            const maxStock = $('#maxStock').val();
+            const minPurchasePrice = $('#minPurchasePrice').val();
+            const maxPurchasePrice = $('#maxPurchasePrice').val();
+            const minSalePrice = $('#minSalePrice').val();
+            const maxSalePrice = $('#maxSalePrice').val();
+
+            // Marka ve Kategori Filtreleri
+            table.column(3).search(brand ? `^${brand}$` : '', true, false);
+            table.column(4).search(category ? `^${category}$` : '', true, false);
+
+            // Tarih Filtreleri
+            if (startDate && endDate) {
+                table.rows().every(function () {
+                    const date = this.data()[6];
+                    const visible = date >= startDate && date <= endDate;
+                    $(this.node()).toggle(visible);
+                });
+            } else {
+                table.rows().show();
+            }
+
+            // Stok ve fiyat aralığı filtreleri
+            if (minStock && maxStock) {
+                table.column(7).search(`^(${minStock}|${maxStock})$`, true, false);
+            } else {
+                table.column(7).search('');
+            }
+
+            if (minPurchasePrice && maxPurchasePrice) {
+                table.column(8).search(`^(${minPurchasePrice}|${maxPurchasePrice})$`, true, false);
+            } else {
+                table.column(8).search('');
+            }
+
+            if (minSalePrice && maxSalePrice) {
+                table.column(9).search(`^(${minSalePrice}|${maxSalePrice})$`, true, false);
+            } else {
+                table.column(9).search('');
+            }
+
+            table.draw();
+        });
+
+        $('#resetFilters').click(function () {
+            $('#filterBrand, #filterCategory, #startDate, #endDate').val('');
+            $('#minStock, #maxStock, #minPurchasePrice, #maxPurchasePrice, #minSalePrice, #maxSalePrice').val('');
+
+            table.search('').columns().search('').draw();
+        });
+    });
+
+
+
 
 </script>
 

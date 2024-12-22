@@ -97,6 +97,11 @@ namespace RestoranSiteV2.Controllers
             return Json(kategoriUrunSayilari, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetToplamKategoriSayisi()
+        {
+            var toplamKategori = c.Kategoris.Count();
+            return Json(toplamKategori, JsonRequestBehavior.AllowGet);
+        }
 
 
     }
