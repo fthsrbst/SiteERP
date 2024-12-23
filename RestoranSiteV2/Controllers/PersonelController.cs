@@ -12,6 +12,8 @@ namespace RestoranSiteV2.Controllers
         // GET: Personel
         public ActionResult Index()
         {
+            ViewBag.Departmanlar = c.Departmans.ToList();
+           
             var degerler = c.Personels.Where(x => x.Durum == true).ToList();
             return View(degerler);
         }

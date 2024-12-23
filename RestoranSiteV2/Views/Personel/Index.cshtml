@@ -1,7 +1,379 @@
-﻿
+﻿@using RestoranSiteV2.Models.Siniflar;
+@model List<Personel>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+    /* Filtre input alanlarını küçült */
+    #filterForm .form-control {
+        width: 90%; /* Alanı biraz daha küçült, %90 kullanmak iyi bir denge sağlar */
+        /* Alt boşluğu ekleyelim */
+    }
+
+    /* Yalnızca filtre alanları için */
+    #filterForm .col-md-3 {
+        max-width: 220px; /* Her filtre alanı için maksimum genişlik */
+        margin-bottom:-40px;
+    }
+
+   
+
+    .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: none;
+        position: relative;
+        padding-right: 2.5rem; /* Sağ tarafı kapatma butonuna yer bırakmak için ayarlayın */
+    }
+
+        .modal-header .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background-color: #fff; /* Butonun arka planını beyaz yap */
+            border-radius: 50%; /* Yuvarlak görünüm */
+            border: 1px solid #ddd; /* Hafif bir kenarlık ekleyin */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+            .modal-header .btn-close:hover {
+                background-color: #f8f9fa; /* Hover sırasında açık gri */
+                border-color: #ccc; /* Kenarlık rengini açık gri yap */
+            }
+
+            .modal-header .btn-close::before {
+                content: '×'; /* Çarpı sembolü */
+                font-size: 20px;
+                font-weight: bold;
+                color: #4e73df; /* Gradient ile uyumlu renk */
+            }
+
+    .modal-footer {
+        border-top: none;
+    }
+
+    .modal-body input {
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    .modal-footer .btn {
+        border-radius: 10px;
+        font-weight: bold;
+        padding: 10px 20px;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #ddd;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+    }
+
+    #kategoriChart {
+        position: relative; /* Ensure it has a positioning context */
+        z-index: 10; /* Set a higher z-index */
+        transition: none;
+    }
+
+    table.dataTable th,
+    table.dataTable td {
+        border: none !important; /* Kenarlıkları kaldır */
+    }
+
+
+
+    .dropdown-menu i {
+        margin-right: 8px; /* Add some space between icon and text */
+    }
+
+    .dropdown-menu .dropdown-item {
+        display: flex; /* Align the icon and text horizontally */
+        align-items: center;
+    }
+
+    .card {
+        width: 100% !important;
+        z-index: 1;
+        margin: 20px;
+        border-radius: 15px; /* Köşeleri yuvarla */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge ekle */
+        transition: width 0.3s ease, border-radius 0.3s ease; /* Transition for width and border-radius */
+        overflow: hidden; /* Prevent content overflow during animation */
+        position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
+        /* Kartın başlangıç genişliği */
+    }
+
+        .card.expanded {
+            width: 90%; /* Kart tamamen genişlesin */
+            z-index: 10; /* Diğer kartların üstünde olmasını sağlamak için z-index ekliyoruz */
+        }
+
+    .card-body {
+        margin-top: 20px;
+        overflow: visible;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #1cc88a); /* Gradient arka plan */
+        color: #fff;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+    }
+
+        .card-header .text-primary {
+            color: white !important; /* Yazı rengi beyaz olacak */
+        }
+
+    .btn {
+        border-radius: 8px; /* Buton köşelerini yuvarla */
+        font-weight: bold;
+        transition: all 0.3s ease; /* Hover geçişi */
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    .btn-outline-success:hover {
+        background-color: #1cc88a;
+        color: white;
+    }
+
+
+
+    /* Buton stilleri */
+    a.btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+        a.btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    a.btn-outline-success {
+        border-color: #1cc88a;
+        color: #1cc88a;
+    }
+
+        a.btn-outline-success:hover {
+            background-color: #1cc88a;
+            color: white;
+        }
+
+    a.btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+
+        a.btn-outline-primary:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+    a.btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+
+        a.btn-outline-danger:hover {
+            background-color: #e74a3b;
+            color: white;
+        }
+</style>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+<link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- FontAwesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<div class="d-flex justify-content-between">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Personeller Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <form id="filterForm">
+                <div class="row">
+                    <!-- Personel Adı Filtre -->
+                    <div class="col-md-3">
+                        <label for="personelAd" class="form-label">Personel Ad</label>
+                        <input type="text" class="form-control" id="personelAd" placeholder="Ara...">
+                    </div>
+
+                    <!-- Personel Soyadı Filtre -->
+                    <div class="col-md-3">
+                        <label for="personelSoyad" class="form-label">Personel Soyad</label>
+                        <input type="text" class="form-control" id="personelSoyad" placeholder="Ara...">
+                    </div>
+
+                    <!-- Departman Filtre -->
+                    <div class="col-md-3">
+                        <label for="departman" class="form-label">Departman</label>
+                        <select class="form-control" id="departman">
+                            <option value="">Tüm Departmanlar</option>
+                            @foreach (var departman in ViewBag.Departmanlar as List<Departman>)
+                            {
+                                <option value="@departman.Departmanid">@departman.DepartmanAd</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Giriş Tarihi Filtre -->
+                    <div class="col-md-3">
+                        <label for="girisTarihi" class="form-label">Giriş Tarihi</label>
+                        <div class="d-flex">
+                            <input type="date" class="form-control" id="girisTarihiMin" placeholder="Başlangıç Tarihi">
+                            <span class="mx-2">-</span>
+                            <input type="date" class="form-control" id="girisTarihiMax" placeholder="Bitiş Tarihi">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="d-flex justify-content-end md-3" style="margin-bottom:10px;">
+                    <button type="submit" class="btn btn-primary">Filtrele</button>
+                </div>
+
+            </form>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#personelEkle">Personel Ekle</a>
+                <div>
+                    <label for="excelFileInput" class="btn btn-outline-warning">Excel Yükle</label>
+                    <input type="file" id="excelFileInput" style="display:none;" />
+
+                    <a href="/Personel/ExcelExport" id="excelExportButton" class="btn btn-outline-success mr-2">İndir</a>
+                    <a href="javascript:void(0);" id="printButton" class="btn btn-outline-info">Yazdır</a>
+                </div>
+                <div id="popupMessage" style="display: none;" class="alert alert-info"></div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="personelTablo">
+                    <thead>
+                        <tr>
+                            <th>İşlemler</th>
+                            <th> ID</th>
+                            <th>Personel Ad</th>
+                            <th>Personel Soyad</th>
+                            <th>Personel Görsel</th>
+                            <th>Departman</th>
+                            <th>Giriş Tarihi</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model)
+                        {
+                            <tr>
+                                <td style="width: 50px;">
+                                    <!-- İşlem menüsü dropdown -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton-@p.Personelid" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-bars"></i> <!-- Hamburger ikonu -->
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-@p.Personelid">
+                                            <li>
+                                                <a class="dropdown-item" href="/Personel/Detay/@p.Personelid">
+                                                    <i class="fas fa-info-circle"></i> Detay
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openUrunGuncelleModal(@p.Personelid)">
+                                                    <i class="fas fa-edit"></i> Güncelle
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="/Personel/UrunSil/@p.Personelid">
+                                                    <i class="fas fa-trash"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>@p.Personelid</td>
+                                <td>@p.PersonelAd</td>
+                                <td>@p.PersonelSoyad</td>
+                                <td>@p.PersonelGorsel</td>
+                                <td>@p.Departman.DepartmanAd</td>
+                                <td>@p.GirisTarihi</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#personelTablo').DataTable({
+        "language": {
+            "search": "Ara:",
+            "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "info": "Toplam _TOTAL_ kayıt arasından _START_ - _END_ arası gösteriliyor",
+            "infoEmpty": "Kayıt yok",
+            "infoFiltered": "(_MAX_ kayıt içinden filtrelendi)",
+            "paginate": {
+                "first": "İlk",
+                "last": "Son",
+                "next": "Sonraki",
+                "previous": "Önceki"
+            }
+        },
+        "lengthMenu": [5, 10, 25, 50, 100]
+    });
+
+</script>

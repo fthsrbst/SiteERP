@@ -27,5 +27,13 @@ namespace RestoranSiteV2.Models.Siniflar
         public ICollection<SatisHareket> SatisHarekets { get; set; }
         public int Departmanid { get; set; }
         public virtual Departman Departman { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime GirisTarihi { get; set; } = DateTime.Now;
+
+
+        [NotMapped]
+        public string GirisTarihiFormatli => GirisTarihi.ToString("dd/MM/yyyy HH:mm");
+
     }
 }
