@@ -111,11 +111,15 @@
         margin: 20px;
         border-radius: 15px; /* Köşeleri yuvarla */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge ekle */
-        transition: width 0.3s ease, border-radius 0.3s ease; /* Transition for width and border-radius */
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for width and border-radius */
         overflow: hidden; /* Prevent content overflow during animation */
         position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
         /* Kartın başlangıç genişliği */
     }
+        .card:hover {
+            transform: translateY(-10px); /* Hafifçe yukarı çıkar */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Gölge ekler */
+        }
 
         .card.expanded {
             width: 100%; /* Kart tamamen genişlesin */
@@ -204,19 +208,18 @@
 </style>
 <div class="d-flex ">
 
-    <!-- Ürün Sayıları Kartı -->
     <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
         <!-- Grafik -->
         <div class="card shadow mb-4 flex-grow-1">
-            <a href="/Urun/Index" style="text-decoration: none;">
+            <a href="/Departman/Index" style="text-decoration: none;">
                 <!-- Yönlendirme linkini buraya ekliyoruz -->
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Ürün Sayıları</h6>
                 </div>
                 <div class="card-body" style="text-align:center;">
-                    <h5 class="card-title text-uppercase text-muted mb-3">Toplam Ürün</h5>
-                    <h3 class="text-primary fw-bold">@ViewBag.TotalProducts</h3>
-                    <i class="bi bi-box-seam fs-1 text-primary"></i>
+                    <h5 class="card-title text-uppercase text-muted mb-3">Toplam Ürünler</h5>
+                    <h3 class="text-info fw-bold">@ViewBag.TotalProducts</h3>
+                    <i class="bi bi-people fs-1 text-info"></i>
                 </div>
             </a>
         </div>
@@ -233,7 +236,7 @@
                 </div>
                 <div class="card-body" style="text-align:center;">
                     <h5 class="card-title text-uppercase text-muted mb-3">Toplam Kategori</h5>
-                    <h3 class="text-success fw-bold">@ViewBag.TotalCategories</h3>
+                    <h3 class="text-info fw-bold">@ViewBag.TotalCategories</h3>
                     <i class="bi bi-tags fs-1 text-success"></i>
                 </div>
             </a>
@@ -252,6 +255,22 @@
                 <div class="card-body" style="text-align:center;">
                     <h5 class="card-title text-uppercase text-muted mb-3">Toplam Departman</h5>
                     <h3 class="text-info fw-bold">@ViewBag.TotalDepartments</h3>
+                    <i class="bi bi-people fs-1 text-info"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <!-- Grafik -->
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Personel/Index" style="text-decoration: none;">
+                <!-- Yönlendirme linkini buraya ekliyoruz -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Personel Sayıları</h6>
+                </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Toplam Personel</h5>
+                    <h3 class="text-info fw-bold">@ViewBag.TotalPersonels</h3>
                     <i class="bi bi-people fs-1 text-info"></i>
                 </div>
             </a>

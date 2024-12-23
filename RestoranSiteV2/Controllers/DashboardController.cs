@@ -19,6 +19,7 @@ namespace RestoranSiteV2.Controllers
             ViewBag.TotalProducts = db.Uruns.Count();
             ViewBag.TotalCategories = db.Kategoris.Count();
             ViewBag.TotalDepartments = db.Departmans.Count();
+            ViewBag.TotalPersonels = db.Personels.Count();
 
             // Kategoriye göre ürün sayıları
             var categoryData = db.Kategoris
