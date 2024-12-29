@@ -415,7 +415,7 @@
                 <h5 class="modal-title" style="color:white;" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
             </div>
             <div class="modal-body">
-                <form id="urunEkleForm">
+                <form id="urunEkleForm" action="/Urun/YeniUrun" method="post">
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="urunAd">Ürün Adı</label>
@@ -459,7 +459,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" style="margin-right:5px;" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                <button type="button" id="urunEkleSubmit" class="btn btn-primary">Kaydet</button>
+                <button type="submit" id="urunEkleSubmit" class="btn btn-primary">Kaydet</button>
             </div>
         </div>
     </div>
@@ -473,7 +473,8 @@
             </div>
             <div class="modal-body">
                 <form id="urunGuncelleForm">
-                    <input type="hidden" id="urunId" />
+                    <input type="hidden" id="Urunid" name="Urunid" />
+
                     <div class="form-group">
                         <label for="urunAd">Ürün Adı</label>
                         <input type="text" class="form-control" id="urunAd" name="UrunAd" required />
@@ -772,18 +773,65 @@
     });
 
 
+    $(document).on('click', '#urunEkleSubmit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/Urun/YeniUrun',
+            type: 'POST',
+            data: $('#urunEkleForm').serialize(),
+            success: function (response) {
+                alert('Ürün başarıyla kaydedildi!');
+                $('#urunEkleModal').modal('hide');
+                location.reload(); // Sayfayı yenilemek için
+            },
+            error: function () {
+                alert('Bir hata oluştu.');
+            }
+        });
+    });
+
+    $(document).on('click', '#urunGuncelleSubmit', function (e) {
+        e.preventDefault();
+
+        var formData = $('#urunGuncelleForm').serialize();
+        console.log("Form Data:", formData); // Form verilerini kontrol et
+
+        $.ajax({
+            url: '/Urun/UrunGuncelle',
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    $('#urunGuncelleModal').modal('hide');
+                    location.reload(); // Sayfayı yeniler
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText); // Hata mesajını göster
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        });
+    });
 
 
-    // Modal'ı açarken, mevcut ürünü AJAX ile getiriyoruz
-    function openUrunGuncelleModal(urunId) {
+
+
+
+    function openUrunGuncelleModal(Urunid) {
+        console.log("Gönderilen Urunid:", Urunid); // Kontrol için ekleyin
+
         $.ajax({
             url: '/Urun/UrunGetir',
             type: 'GET',
-            data: { id: urunId }, // ID'yi controller'a gönderiyoruz
+            data: { id: Urunid },
             success: function (data) {
+                console.log("Alınan Veri:", data); // Gelen veriyi kontrol edin
+
                 if (data) {
-                    // Modal input'larını dolduruyoruz
-                    $('#urunId').val(data.Urunid);
+                    $('#Urunid').val(data.Urunid);
                     $('#urunAd').val(data.UrunAd);
                     $('#marka').val(data.Marka);
                     $('#stok').val(data.Stok);
@@ -794,10 +842,9 @@
                     $('#aciklama').val(data.Aciklama);
                     $('#durum').prop('checked', data.Durum);
 
-                    // Modal'ı gösteriyoruz
                     $('#urunGuncelleModal').modal('show');
                 } else {
-                    alert("Ürün verileri alınırken bir hata oluştu.");
+                    alert("Ürün bulunamadı.");
                 }
             },
             error: function () {
@@ -805,6 +852,11 @@
             }
         });
     }
+
+
+
+
+
 
 
 

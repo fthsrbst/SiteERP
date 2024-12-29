@@ -134,10 +134,51 @@ namespace RestoranSiteV2.Controllers
             return RedirectToAction("Detay", new { id = Urunid });
         }
 
+        [HttpPost]
+        public JsonResult UrunGuncelle(Urun model)
+        {
+            // Modeldeki Urunid'yi logla
+            System.Diagnostics.Debug.WriteLine("Model Urunid: " + model.Urunid);
+
+            // Veritabanında ürünü sorgula
+            var urun = c.Uruns.Where(x => x.Urunid == model.Urunid).FirstOrDefault();
+
+            // Veritabanındaki Urunid'yi logla
+            System.Diagnostics.Debug.WriteLine("Veritabanındaki Urunid: " + (urun != null ? urun.Urunid.ToString() : "Ürün bulunamadı"));
+
+            if (urun != null)
+            {
+                // Ürünü güncelle
+                urun.UrunAd = model.UrunAd;
+                urun.Marka = model.Marka;
+                urun.Stok = model.Stok;
+                urun.AlisFiyat = model.AlisFiyat;
+                urun.SatisFiyat = model.SatisFiyat;
+                urun.UrunGorsel = model.UrunGorsel;
+                urun.Kategoriid = model.Kategoriid;
+                urun.Aciklama = model.Aciklama;
+                urun.Durum = model.Durum;
+
+                // Değişiklikleri kaydet
+                c.SaveChanges();
+
+                return Json(new { success = true, message = "Ürün başarıyla güncellendi." });
+            }
+
+            return Json(new { success = false, message = "Ürün bulunamadı." });
+        }
+
+
+
+
+
 
         // Controller'da UrunGetir methodu
         public ActionResult UrunGetir(int id)
         {
+            // Gelen id'yi kontrol için loglayın
+            System.Diagnostics.Debug.WriteLine("Alınan ID: " + id);
+
             var urun = c.Uruns
                 .Where(u => u.Urunid == id)
                 .Select(u => new
@@ -151,18 +192,23 @@ namespace RestoranSiteV2.Controllers
                     UrunGorsel = u.UrunGorsel,
                     Kategoriid = u.Kategoriid,
                     Aciklama = u.Aciklama,
-                    Durum = u.Durum,
-                    EklenmeTarihi = u.EklenmeTarihi
+                    Durum = u.Durum
                 })
                 .FirstOrDefault();
 
             if (urun == null)
             {
+                System.Diagnostics.Debug.WriteLine("Ürün bulunamadı."); // Log ekleyin
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
+            System.Diagnostics.Debug.WriteLine("Bulunan Ürün: " + urun.UrunAd); // Log ekleyin
             return Json(urun, JsonRequestBehavior.AllowGet);
         }
+
+
+
+
 
 
 
