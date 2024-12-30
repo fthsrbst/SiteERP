@@ -30,7 +30,7 @@ namespace RestoranSiteV2.Controllers
             if (ModelState.IsValid)
             {
                 var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == model.KullaniciAd);
-                if (admin != null && admin.Sifre == model.Sifre) // Şifre kontrolü
+                if (admin != null && VerifyPassword(model.Sifre, admin.Sifre)) // Hash doğrulaması
                 {
                     // Başarılı giriş, Dashboard'a yönlendir
                     return RedirectToAction("Index", "Dashboard");
@@ -44,58 +44,66 @@ namespace RestoranSiteV2.Controllers
             return View(model); // Hata varsa, giriş sayfasını tekrar göster
         }
 
-        // Şifre Unuttum Page (GET)
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        // Şifre Unuttum Post (POST)
+        // Şifre Unuttum Post (AJAX)
         [HttpPost]
-        public JsonResult ForgotPassword(string email)
+        public JsonResult ForgotPassword(string username)
         {
-            var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == email);
+            var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == username);
             if (admin != null)
             {
-                var resetCode = GenerateRandomCode();
-                TempData["ResetCode"] = resetCode;
-                // Gerçek uygulamada e-posta gönderme işlemi yapılabilir
-                return Json(new { success = true, resetCode = resetCode });
+                var verificationCode = GenerateRandomCode();
+                Session["VerificationCode"] = verificationCode; // Doğrulama kodunu oturuma kaydet
+                Session["ResetUser"] = admin.KullaniciAd;
+
+                // Konsola doğrulama kodunu yazdır
+                Console.WriteLine($"Doğrulama Kodu: {verificationCode}");
+
+                // Doğrulama kodunu tarayıcıya gönder
+                return Json(new { success = true, verificationCode = verificationCode });
             }
-            else
-            {
-                return Json(new { success = false });
-            }
+            return Json(new { success = false });
         }
 
 
-        // Şifre Sıfırlama Page (GET)
-        public ActionResult ResetPassword()
-        {
-            return View();
-        }
-
-        // Şifre Sıfırlama Post (POST)
+        // Şifre Sıfırlama Post (AJAX)
         [HttpPost]
-        public ActionResult ResetPassword(string resetCode, string newPassword)
+        public JsonResult ResetPassword(string verificationCode, string newPassword)
         {
-            if (resetCode == TempData["ResetCode"]?.ToString())
+            // Debug çıktısını kontrol etmek için
+            System.Diagnostics.Debug.WriteLine($"Entered ResetPassword method: {verificationCode}, {newPassword}");
+
+            if (Session["VerificationCode"]?.ToString() == verificationCode && Session["ResetUser"] != null)
             {
-                var admin = _context.Admins.FirstOrDefault();
+                var username = Session["ResetUser"].ToString();
+                System.Diagnostics.Debug.WriteLine($"ResetUser: {username}");
+
+                var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == username);
                 if (admin != null)
                 {
-                    // Şifreyi hash'leme işlemi
-                    admin.Sifre = HashPassword(newPassword); // Hashleme işlemi
-                    _context.SaveChanges(); // Yeni şifreyi veritabanına kaydet
-                    return RedirectToAction("Login");
+                    admin.Sifre = HashPassword(newPassword); // Şifreyi hash'le
+                    _context.SaveChanges();
+
+                    System.Diagnostics.Debug.WriteLine($"Password reset successful for user: {username}");
+
+                    // Doğrulama kodu ve kullanıcı bilgisini temizle
+                    Session.Remove("VerificationCode");
+                    Session.Remove("ResetUser");
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Admin user not found for username: {username}");
                 }
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Geçersiz reset kodu.");
+                System.Diagnostics.Debug.WriteLine("Verification failed or ResetUser session is null.");
             }
-            return View();
+
+            return Json(new { success = false });
         }
+
 
         // Şifreyi hash'leme fonksiyonu
         private string HashPassword(string password)
@@ -107,13 +115,18 @@ namespace RestoranSiteV2.Controllers
             }
         }
 
+        // Hash kontrolü
+        private bool VerifyPassword(string inputPassword, string hashedPassword)
+        {
+            var hashedInput = HashPassword(inputPassword);
+            return hashedInput == hashedPassword;
+        }
 
-        // Rastgele şifre sıfırlama kodu oluşturma
+        // Rastgele doğrulama kodu oluşturma
         private string GenerateRandomCode()
         {
             var random = new Random();
-            var code = random.Next(100000, 999999).ToString();
-            return code;
+            return random.Next(100000, 999999).ToString();
         }
     }
 }

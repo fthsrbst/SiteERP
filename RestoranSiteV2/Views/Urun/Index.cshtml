@@ -1,5 +1,6 @@
 ﻿@using RestoranSiteV2.Models.Siniflar;
 @model List<Urun>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -221,6 +222,7 @@
 </style>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
 <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -473,35 +475,38 @@
             </div>
             <div class="modal-body">
                 <form id="urunGuncelleForm">
-                    <input type="hidden" id="Urunid" name="Urunid" />
-
-                    <div class="form-group">
-                        <label for="urunAd">Ürün Adı</label>
-                        <input type="text" class="form-control" id="urunAd" name="UrunAd" required />
+                    <input type="hidden" id="UrunidGuncelle" name="Urunid" />
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="urunAdGuncelle">Ürün Adı</label>
+                            <input type="text" class="form-control" id="urunAdGuncelle" name="UrunAd" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="markaGuncelle">Marka</label>
+                            <input type="text" class="form-control" id="markaGuncelle" name="Marka" required />
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="marka">Marka</label>
-                        <input type="text" class="form-control" id="marka" name="Marka" required />
+                        <label for="stokGuncelle">Stok</label>
+                        <input type="number" class="form-control" id="stokGuncelle" name="Stok" required />
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="alisFiyatGuncelle">Alış Fiyatı</label>
+                            <input type="number" step="0.01" class="form-control" id="alisFiyatGuncelle" name="AlisFiyat" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="satisFiyatGuncelle">Satış Fiyatı</label>
+                            <input type="number" step="0.01" class="form-control" id="satisFiyatGuncelle" name="SatisFiyat" required />
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="stok">Stok</label>
-                        <input type="number" class="form-control" id="stok" name="Stok" required />
+                        <label for="urunGorselGuncelle">Ürün Görseli</label>
+                        <input type="text" class="form-control" id="urunGorselGuncelle" name="UrunGorsel" />
                     </div>
                     <div class="form-group">
-                        <label for="alisFiyat">Alış Fiyatı</label>
-                        <input type="number" step="0.01" class="form-control" id="alisFiyat" name="AlisFiyat" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="satisFiyat">Satış Fiyatı</label>
-                        <input type="number" step="0.01" class="form-control" id="satisFiyat" name="SatisFiyat" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="urunGorsel">Ürün Görseli</label>
-                        <input type="text" class="form-control" id="urunGorsel" name="UrunGorsel" />
-                    </div>
-                    <div class="form-group">
-                        <label for="kategori">Kategori</label>
-                        <select class="form-control" id="kategori" name="Kategoriid" required>
+                        <label for="kategoriGuncelle">Kategori</label>
+                        <select class="form-control" id="kategoriGuncelle" name="Kategoriid" required>
                             <option value="">Kategori Seçin</option>
                             @foreach (var kategori in ViewBag.Kategoriler)
                             {
@@ -510,12 +515,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="aciklama">Açıklama</label>
-                        <textarea class="form-control" id="aciklama" name="Aciklama"></textarea>
+                        <label for="aciklamaGuncelle">Açıklama</label>
+                        <textarea class="form-control" id="aciklamaGuncelle" name="Aciklama"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="durum">Durum</label>
-                        <input type="checkbox" id="durum" name="Durum" />
+                        <label for="durumGuncelle">Durum</label>
+                        <input type="checkbox" id="durumGuncelle" name="Durum" />
                     </div>
                 </form>
             </div>
@@ -550,7 +555,7 @@
     });
 
 
-   
+
 
 
 
@@ -821,41 +826,31 @@
 
 
     function openUrunGuncelleModal(Urunid) {
-        console.log("Gönderilen Urunid:", Urunid); // Kontrol için ekleyin
-
         $.ajax({
             url: '/Urun/UrunGetir',
             type: 'GET',
             data: { id: Urunid },
             success: function (data) {
-                console.log("Alınan Veri:", data); // Gelen veriyi kontrol edin
+                // Gelen veriyi modalda doldur
+                $('#UrunidGuncelle').val(data.Urunid);
+                $('#urunAdGuncelle').val(data.UrunAd);
+                $('#markaGuncelle').val(data.Marka);
+                $('#stokGuncelle').val(data.Stok);
+                $('#alisFiyatGuncelle').val(data.AlisFiyat);
+                $('#satisFiyatGuncelle').val(data.SatisFiyat);
+                $('#urunGorselGuncelle').val(data.UrunGorsel);
+                $('#kategoriGuncelle').val(data.Kategoriid);
+                $('#aciklamaGuncelle').val(data.Aciklama);
+                $('#durumGuncelle').prop('checked', data.Durum);
 
-                if (data) {
-                    $('#Urunid').val(data.Urunid);
-                    $('#urunAd').val(data.UrunAd);
-                    $('#marka').val(data.Marka);
-                    $('#stok').val(data.Stok);
-                    $('#alisFiyat').val(data.AlisFiyat);
-                    $('#satisFiyat').val(data.SatisFiyat);
-                    $('#urunGorsel').val(data.UrunGorsel);
-                    $('#kategori').val(data.Kategoriid);
-                    $('#aciklama').val(data.Aciklama);
-                    $('#durum').prop('checked', data.Durum);
-
-                    $('#urunGuncelleModal').modal('show');
-                } else {
-                    alert("Ürün bulunamadı.");
-                }
+                // Modalı göster
+                $('#urunGuncelleModal').modal('show');
             },
             error: function () {
-                alert("Ürün verileri alınırken bir hata oluştu.");
+                alert("Ürün verisi alınamadı.");
             }
         });
     }
-
-
-
-
 
 
 
