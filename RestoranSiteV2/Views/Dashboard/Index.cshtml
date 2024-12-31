@@ -116,6 +116,7 @@
         position: relative; /* Kartın yer değiştirmesini engellemek için relative position ekliyoruz */
         /* Kartın başlangıç genişliği */
     }
+
         .card:hover {
             transform: translateY(-10px); /* Hafifçe yukarı çıkar */
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Gölge ekler */
@@ -207,7 +208,6 @@
         }
 </style>
 <div class="d-flex ">
-
     <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
         <!-- Grafik -->
         <div class="card shadow mb-4 flex-grow-1">
@@ -280,38 +280,109 @@
 </div>
 
 <!-- Grafikler -->
-<div class="row" style="margin-top:-20px;">
-    <!-- Küçük Kategori Bazlı Ürünler Kartı -->
-    <div class="col-md-4">
-        <a href="/Urun/Index" style="text-decoration: none;">
-            <!-- Yönlendirme linkini buraya ekliyoruz -->
-            <div class="card shadow-sm border-0 mb-4" style="height: 430px; width:87%">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Kategori Bazlı Ürünler</h6>
-                </div>
-                <div class="card-body" style="text-align: center;">
-                    <canvas id="categoryChart" style="max-height: 400px;"></canvas>
-                </div>
-            </div>
-        </a>
+<div class="d-flex" style="margin-top:-20px;">
+
+    <div class="card shadow mb-3" style="width: 48%;">
+        <div class="card-header py-3">
+            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">Stoğa Göre Ürün Grafiği</h6>
+        </div>
+        <div class="card-body">
+            <canvas id="stokChart"></canvas>
+        </div>
     </div>
 
-    <!-- Aylık Satış Verileri Kartı -->
-    <div class="col-md-6" >
-        <a href="/Kategori/Index" style="text-decoration: none;">
-            <!-- Yönlendirme linkini buraya ekliyoruz -->
-            <div class="card shadow-sm border-0 mb-4"  style="height: 430px;" >
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Aylık Satış Verileri</h6>
-                </div>
-                <div class="card-body">
-                    <canvas id="salesChart"></canvas>
-                </div>
-            </div>
-        </a>
+    <div class="card shadow mb-3" style="width: 48%;">
+        <div class="card-header py-3">
+            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">Fiyata Göre Ürün Grafiği</h6>
+        </div>
+        <div class="card-body">
+            <canvas id="fiyatChart"></canvas>
+        </div>
     </div>
+
+</div>
+<div class="d-flex" style="margin-top: 20px;">
+
+    <!-- En Çok Satılan Ürün Kartı -->
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Urun/MostSold" style="text-decoration: none;">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">En Çok Satılan Ürün</h6>
+                </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Ürün Adı</h5>
+                    <h3 class="text-info fw-bold">@ViewBag.MostSoldProductName</h3>
+                    <h5 class="text-muted">Satış Adedi: @ViewBag.MostSoldQuantity</h5>
+                    <i class="bi bi-cart fs-1 text-success"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- En Az Satılan Ürün Kartı -->
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Urun/LeastSold" style="text-decoration: none;">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">En Az Satılan Ürün</h6>
+                </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Ürün Adı</h5>
+                    <h3 class="text-info fw-bold">@ViewBag.LeastSoldProductName</h3>
+                    <h5 class="text-muted">Satış Adedi: @ViewBag.LeastSoldQuantity</h5>
+                    <i class="bi bi-cart-dash fs-1 text-danger"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- En Az Stoğa Sahip Ürün Kartı -->
+    <div class="d-flex flex-column flex-grow-1" style="max-width: 35%; height:90%;">
+        <div class="card shadow mb-4 flex-grow-1">
+            <a href="/Urun/LeastStock" style="text-decoration: none;">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">En Az Stoğa Sahip Ürün</h6>
+                </div>
+                <div class="card-body" style="text-align:center;">
+                    <h5 class="card-title text-uppercase text-muted mb-3">Ürün Adı</h5>
+                    <h3 class="text-info fw-bold">@ViewBag.LeastStockProductName</h3>
+                    <h5 class="text-muted">Stok Miktarı: @ViewBag.LeastStockQuantity</h5>
+                    <i class="bi bi-box fs-1 text-warning"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
 </div>
 
+
+<div class="d-flex justify-content-between">
+    <!-- Aylık Satış Verileri Kartı -->
+    <div class="card shadow mb-4">
+        <a href="/Kategori/Index" style="text-decoration: none;">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Aylık Satış Verileri</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </a>
+    </div>
+
+    <!-- Küçük Kategori Bazlı Ürünler Kartı -->
+    <div class="card shadow mb-4">
+        <a href="/Urun/Index" style="text-decoration: none;">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Kategori Bazlı Ürünler</h6>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                <canvas id="categoryChart" style="max-height: 400px;"></canvas>
+            </div>
+        </a>
+    </div>
+
+</div>
 
 
 
@@ -387,4 +458,61 @@
             }
         }
     });
+
+
+     // Backend'den gelen veriler
+const urunler = @Html.Raw(Json.Encode(ViewBag.Urunler));
+
+// Stoğa Göre Ürün Grafiği
+const stokCtx = document.getElementById('stokChart').getContext('2d');
+new Chart(stokCtx, {
+    type: 'bar', // Stok için çubuk grafik
+    data: {
+        labels: urunler.map(u => u.UrunAd),
+        datasets: [{
+            label: 'Stok',
+            data: urunler.map(u => u.Stok),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: true },
+            tooltip: { enabled: true }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+// Fiyata Göre Ürün Grafiği
+const fiyatCtx = document.getElementById('fiyatChart').getContext('2d');
+new Chart(fiyatCtx, {
+    type: 'line', // Fiyat için çizgi grafik
+    data: {
+        labels: urunler.map(u => u.UrunAd),
+        datasets: [{
+            label: 'Satış Fiyatı',
+            data: urunler.map(u => u.SatisFiyat),
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: true },
+            tooltip: { enabled: true }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
 </script>

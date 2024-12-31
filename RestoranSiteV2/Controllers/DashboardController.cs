@@ -31,14 +31,6 @@ namespace RestoranSiteV2.Controllers
                 .ToList(); // LINQ işlemini tamamla
             ViewBag.CategoryDataJson = JsonConvert.SerializeObject(categoryData);
 
-            // Tüm ay isimlerini hazırla
-            var monthNames = new Dictionary<int, string>
-    {
-        { 1, "Ocak" }, { 2, "Şubat" }, { 3, "Mart" }, { 4, "Nisan" },
-        { 5, "Mayıs" }, { 6, "Haziran" }, { 7, "Temmuz" }, { 8, "Ağustos" },
-        { 9, "Eylül" }, { 10, "Ekim" }, { 11, "Kasım" }, { 12, "Aralık" }
-    };
-
             // Aylık satış verileri
             var salesData = db.SatisHarekets
                 .GroupBy(s => s.Tarih.Month)
@@ -49,33 +41,101 @@ namespace RestoranSiteV2.Controllers
                 })
                 .ToList();
 
-            // Eksik ayları tamamla
+            var monthNames = new Dictionary<int, string>
+    {
+        { 1, "Ocak" }, { 2, "Şubat" }, { 3, "Mart" }, { 4, "Nisan" },
+        { 5, "Mayıs" }, { 6, "Haziran" }, { 7, "Temmuz" }, { 8, "Ağustos" },
+        { 9, "Eylül" }, { 10, "Ekim" }, { 11, "Kasım" }, { 12, "Aralık" }
+    };
+
             var completeSalesData = monthNames
                 .Select(m => new
                 {
                     MonthName = m.Value,
-                    TotalSales = salesData.Where(s => s.Month == m.Key).Sum(s => s.TotalSales) // Eğer satış yoksa 0
+                    TotalSales = salesData.Where(s => s.Month == m.Key).Sum(s => s.TotalSales)
                 })
                 .ToList();
 
             ViewBag.SalesDataJson = JsonConvert.SerializeObject(completeSalesData);
 
             var productData = db.Uruns
-                .GroupBy(u => DbFunctions.TruncateTime(u.EklenmeTarihi))  // Sadece tarih kısmını almak için DbFunctions.TruncateTime kullanıyoruz
+                .GroupBy(u => DbFunctions.TruncateTime(u.EklenmeTarihi))
                 .Select(g => new
                 {
                     Date = g.Key,
                     Count = g.Count()
                 })
-                .OrderBy(x => x.Date) // Tarihe göre sıralama
+                .OrderBy(x => x.Date)
                 .ToList();
 
-            // JSON verisini ViewBag'e aktar
             ViewBag.ProductDataJson = JsonConvert.SerializeObject(productData);
+
+            // 1. En Çok Satılan Ürün
+            var mostSoldProduct = db.SatisHarekets
+                                    .GroupBy(s => s.Urunid)
+                                    .Select(g => new
+                                    {
+                                        UrunId = g.Key,
+                                        TotalSold = g.Sum(s => s.Adet)
+                                    })
+                                    .OrderByDescending(x => x.TotalSold)
+                                    .FirstOrDefault();
+
+            var mostSoldProductDetails = mostSoldProduct != null ? db.Uruns
+                                                        .Where(u => u.Urunid == mostSoldProduct.UrunId)
+                                                        .Select(u => new
+                                                        {
+                                                            u.UrunAd,
+                                                            TotalSold = mostSoldProduct.TotalSold
+                                                        })
+                                                        .FirstOrDefault() : null;
+
+            // 2. En Az Satılan Ürün
+            var leastSoldProduct = db.SatisHarekets
+                                     .GroupBy(s => s.Urunid)
+                                     .Select(g => new
+                                     {
+                                         UrunId = g.Key,
+                                         TotalSold = g.Sum(s => s.Adet)
+                                     })
+                                     .OrderBy(x => x.TotalSold)
+                                     .FirstOrDefault();
+
+            var leastSoldProductDetails = leastSoldProduct != null ? db.Uruns
+                                                            .Where(u => u.Urunid == leastSoldProduct.UrunId)
+                                                            .Select(u => new
+                                                            {
+                                                                u.UrunAd,
+                                                                TotalSold = leastSoldProduct.TotalSold
+                                                            })
+                                                            .FirstOrDefault() : null;
+
+            // 3. En Az Stoğa Sahip Ürün
+            var leastStockProduct = db.Uruns
+                                      .OrderBy(u => u.Stok)
+                                      .FirstOrDefault();
+
+            // Verileri ViewBag'e aktar
+            ViewBag.MostSoldProductName = mostSoldProductDetails?.UrunAd;
+            ViewBag.MostSoldQuantity = mostSoldProductDetails?.TotalSold;
+
+            ViewBag.LeastSoldProductName = leastSoldProductDetails?.UrunAd;
+            ViewBag.LeastSoldQuantity = leastSoldProductDetails?.TotalSold;
+
+            ViewBag.LeastStockProductName = leastStockProduct?.UrunAd;
+            ViewBag.LeastStockQuantity = leastStockProduct?.Stok;
+
+            // Ürün verilerini JSON formatında aktar
+            ViewBag.Urunler = db.Uruns.Where(x => x.Durum == true).Select(u => new
+            {
+                u.Urunid,
+                u.UrunAd,
+                u.Stok,
+                u.SatisFiyat
+            }).ToList();
 
             return View();
         }
-
 
     }
 }
