@@ -71,10 +71,21 @@ namespace RestoranSiteV2.Controllers
                 urunler = urunler.Where(x => x.SatisFiyat <= maxSatisFiyat.Value);
             }
 
+            // Grafik için verileri ViewBag'e aktar
+            ViewBag.Urunler = c.Uruns.Where(x => x.Durum == true).Select(u => new
+            {
+                u.Urunid, // Ürün ID
+                u.UrunAd,
+                u.Stok,
+                u.SatisFiyat
+            }).ToList();
+
+
             // Filtrelenmiş listeyi gönder
             ViewBag.Kategoriler = c.Kategoris.ToList(); // Kategoriler dropdown için
             return View(urunler.ToList());
         }
+
 
 
 
