@@ -545,6 +545,14 @@
     <Compile Include="Migrations\202412211039499_t.Designer.cs">
       <DependentUpon>202412211039499_t.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202501020553161_MigrationAdi.cs" />
+    <Compile Include="Migrations\202501020553161_MigrationAdi.Designer.cs">
+      <DependentUpon>202501020553161_MigrationAdi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202501020556094_AddCariidToSatisHareket.cs" />
+    <Compile Include="Migrations\202501020556094_AddCariidToSatisHareket.Designer.cs">
+      <DependentUpon>202501020556094_AddCariidToSatisHareket.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Siniflar\Admin.cs" />
     <Compile Include="Models\Siniflar\Cariler.cs" />
@@ -556,6 +564,7 @@
     <Compile Include="Models\Siniflar\Kategori.cs" />
     <Compile Include="Models\Siniflar\Personel.cs" />
     <Compile Include="Models\Siniflar\SatisHareket.cs" />
+    <Compile Include="Models\Siniflar\SessionTimeoutAttribute.cs" />
     <Compile Include="Models\Siniflar\Urun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -607,6 +616,7 @@
     <Content Include="Template\assets\img\elements\7.jpg" />
     <Content Include="Template\assets\img\favicon\araskargo_icon.png" />
     <Content Include="Template\assets\img\favicon\araskargo_logo_no_bg.png" />
+    <Content Include="Template\assets\img\favicon\favico.png" />
     <Content Include="Template\assets\img\favicon\favicon.ico" />
     <Content Include="Template\assets\img\icons\brands\asana.png" />
     <Content Include="Template\assets\img\icons\brands\behance.png" />
@@ -2813,6 +2823,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202412211039499_t.resx">
       <DependentUpon>202412211039499_t.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202501020553161_MigrationAdi.resx">
+      <DependentUpon>202501020553161_MigrationAdi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202501020556094_AddCariidToSatisHareket.resx">
+      <DependentUpon>202501020556094_AddCariidToSatisHareket.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

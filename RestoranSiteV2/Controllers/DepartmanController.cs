@@ -21,12 +21,21 @@ namespace RestoranSiteV2.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult DepartmanEkle(Departman d)
+        public ActionResult YeniDepartman(Departman p)
         {
-            c.Departmans.Add(d);
-            c.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                c.Departmans.Add(p);
+                c.SaveChanges();
+                TempData["AlertMessage"] = "Departman başarıyla kaydedildi.";
+                return RedirectToAction("Index");
+            }
+
+            return View(p);
         }
+
+
+
         public ActionResult DepartmanSil(int id)
         {
             var dep = c.Departmans.Find(id);

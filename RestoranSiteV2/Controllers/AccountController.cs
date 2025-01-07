@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using RestoranSiteV2.Models.Siniflar;
 
@@ -24,6 +25,9 @@ namespace RestoranSiteV2.Controllers
         }
 
         // Login Post (POST)
+        // Login Post (POST)
+        // Login Post (POST)
+        // Login Post (POST)
         [HttpPost]
         public ActionResult Login(Admin model)
         {
@@ -32,7 +36,23 @@ namespace RestoranSiteV2.Controllers
                 var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == model.KullaniciAd);
                 if (admin != null && VerifyPassword(model.Sifre, admin.Sifre)) // Hash doğrulaması
                 {
-                    // Başarılı giriş, Dashboard'a yönlendir
+                    // Başarılı giriş, cookie oluşturuluyor
+                    var cookie = new HttpCookie("AuthCookie")
+                    {
+                        Value = $"{admin.KullaniciAd}|{DateTime.Now.ToString()}",
+                        Expires = DateTime.Now.AddHours(1), // 1 saatlik süre
+                        HttpOnly = true, // XSS saldırılarına karşı güvenlik
+                        Secure = Request.IsSecureConnection // Sadece HTTPS üzerinden gönderilmesini sağla
+                    };
+                    Response.Cookies.Add(cookie);
+
+                    // Başarılı giriş kontrolü
+                    if (Request.Cookies["AuthCookie"] != null)
+                    {
+                        Console.WriteLine("Cookie oluşturuldu: " + Request.Cookies["AuthCookie"].Value);
+                    }
+
+                    // Dashboard'a yönlendir
                     return RedirectToAction("Index", "Dashboard");
                 }
                 else
@@ -44,11 +64,40 @@ namespace RestoranSiteV2.Controllers
             return View(model); // Hata varsa, giriş sayfasını tekrar göster
         }
 
+
+
+
+        public ActionResult Logout()
+        {
+            var authCookie = Request.Cookies["AuthCookie"];
+            if (authCookie != null)
+            {
+                authCookie.Expires = DateTime.Now.AddDays(-1); // Cookie'yi geçersiz kıl
+                authCookie.Value = null;                      // Değerini sıfırla
+                authCookie.Path = "/";
+                authCookie.HttpOnly = true;                   // Güvenlik için HttpOnly
+                authCookie.Secure = Request.IsSecureConnection; // HTTPS için Secure flag
+                Response.Cookies.Set(authCookie);
+
+                System.Diagnostics.Debug.WriteLine("Logout: Cookie başarıyla silindi.");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Logout: AuthCookie bulunamadı.");
+            }
+
+            // Kullanıcıyı login sayfasına yönlendir
+            return RedirectToAction("Login", "Account");
+        }
+
+
         // Şifre Unuttum Post (AJAX)
         [HttpPost]
         public JsonResult ForgotPassword(string username)
         {
             var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == username);
+            System.Diagnostics.Debug.WriteLine($"Kullanıcı adı arandı: {username}");
+
             if (admin != null)
             {
                 var verificationCode = GenerateRandomCode();
@@ -56,7 +105,7 @@ namespace RestoranSiteV2.Controllers
                 Session["ResetUser"] = admin.KullaniciAd;
 
                 // Konsola doğrulama kodunu yazdır
-                Console.WriteLine($"Doğrulama Kodu: {verificationCode}");
+                System.Diagnostics.Debug.WriteLine(verificationCode);
 
                 // Doğrulama kodunu tarayıcıya gönder
                 return Json(new { success = true, verificationCode = verificationCode });

@@ -86,9 +86,6 @@ namespace RestoranSiteV2.Controllers
             return View(urunler.ToList());
         }
 
-
-
-
         [HttpGet]
         public ActionResult YeniUrun()
         {

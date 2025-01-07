@@ -226,6 +226,7 @@
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
 
 <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
 <!-- FontAwesome for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -240,10 +241,12 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
 
                 <!-- Left-aligned "Yeni Departman Ekle" button -->
-                <a href="/Departman/DepartmanEkle" class="btn btn-primary">Departman Ekle</a>
+                <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#DepartmanEkleModal">Yeni Departman Ekle</a>
+
                 <div>
                     <!-- Right-aligned "İndir" button -->
-                    <a href="#" class="btn btn-outline-success">İndir</a>
+                    <a href="javascript:void(0);" id="excelExportButton" class="btn btn-outline-success">İndir</a>
+
                 </div>
             </div>
             <div class="card-body">
@@ -299,24 +302,29 @@
         </div>
     </div>
 </div>
-<div class="d-flex justify-content-between">
-    <div class="card shadow mb-4" style="width: 48%;">
-        <div class="card-header py-3">
-            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">sol Kategori Tablosu</h6>
-        </div>
-        <div class="card-body">
-            <p>Bu, sol tarafa yerleştirilen card içeriğidir.</p>
-        </div>
-    </div>
-    <div class="card shadow mb-4" style="width: 48%;">
-        <div class="card-header py-3">
-            <h6 style="color: white;" class="m-0 font-weight-bold text-primary">sağ Kategori Tablosu</h6>
-        </div>
-        <div class="card-body">
-            <p>Bu, sağ tarafa yerleştirilen card içeriğidir.</p>
+
+<div class="modal fade" id="DepartmanEkleModal" tabindex="-1" role="dialog" aria-labelledby="DepartmanEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color:white;" id="DepartmanEkleModalLabel">Yeni Departman Ekle</h5>
+            </div>
+            <div class="modal-body">
+                <form id="departmanEkleForm" action="/Departman/YeniDepartman" method="post">
+                    <div class="form-group">
+                        <label for="departmanAd">Departman Adı</label>
+                        <input type="text" class="form-control" id="departmanAd" name="DepartmanAd" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="margin-right:5px;" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="submit" id="DepartmanEkleSubmit" class="btn btn-primary">Kaydet</button>
+            </div>
         </div>
     </div>
 </div>
+
 
 
 <script>
@@ -334,7 +342,29 @@
                 "next": "Sonraki",
                 "previous": "Önceki"
             }
-        }
+        },
+         "lengthMenu": [5, 10, 25, 50, 100]
+    });
+
+    $(document).on('click', '#DepartmanEkleSubmit', function (e) {
+        e.preventDefault();
+
+        // Form verilerini doğru şekilde alıyoruz
+        var formData = $('#departmanEkleForm').serialize();
+
+        $.ajax({
+            url: '/Departman/YeniDepartman',
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                alert('Departman başarıyla kaydedildi!');
+                $('#DepartmanEkleModal').modal('hide');
+                location.reload(); // Sayfayı yenilemek için
+            },
+            error: function () {
+                alert('Bir hata oluştu.');
+            }
+        });
     });
 
 
@@ -411,9 +441,48 @@
     });
 });
 
+    $(document).ready(function () {
+        // Excel export button functionality
+        $('#excelExportButton').on('click', function () {
+            // Get the table element
+            var table = document.getElementById('dataTable');
+
+            // Create a new Workbook
+            var wb = XLSX.utils.table_to_book(table, { sheet: "Departmanlar" });
+
+            // Generate Excel file and trigger download
+            XLSX.writeFile(wb, 'departmanlar.xlsx');
+        });
+    });
 
 
+    $(document).ready(function () {
+        $('#departmanEkleSubmit').on('click', function (e) {
+            e.preventDefault(); // Formun varsayılan gönderimini engeller.
 
+            // Form verilerini al
+            var formData = {
+                DepartmanAd: $('#departmanAd').val()
+            };
 
-
+            // AJAX ile sunucuya gönder
+            $.ajax({
+                url: '/Departman/YeniDepartman', // Departman ekleme için sunucu tarafındaki URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    // Başarılı ekleme durumu
+                    alert('Departman başarıyla eklendi!');
+                    $('#departmanEkleModal').modal('hide'); // Modalı kapat
+                    location.reload(); // Sayfayı yenile veya tabloyu güncelle
+                },
+                error: function (error) {
+                    // Hata durumu
+                    console.error('Departman eklenirken bir hata oluştu:', error);
+                    alert('Departman eklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+                }
+            });
+        });
+    });
 </script>

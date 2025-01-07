@@ -21,13 +21,69 @@ namespace RestoranSiteV2
         {
             var httpContext = HttpContext.Current;
 
-            // HttpContext ve Session'ın null olup olmadığını kontrol et
-            if (httpContext != null && httpContext.Session != null && httpContext.Session["User"] == null
-                && !httpContext.Request.Url.AbsolutePath.Contains("/Account/Login"))
+            // Logout isteğini bypass et
+            if (httpContext.Request.Url.AbsolutePath.Contains("/Account/Logout"))
             {
-                httpContext.Response.Redirect("/Account/Login");
+                System.Diagnostics.Debug.WriteLine("Logout isteği algılandı, Application_BeginRequest atlanıyor.");
+                return;
+            }
+
+            // Şifre sıfırlama yollarını bypass et
+            if (httpContext.Request.Url.AbsolutePath.Contains("/Account/ForgotPassword") ||
+                httpContext.Request.Url.AbsolutePath.Contains("/Account/ResetPassword"))
+            {
+                System.Diagnostics.Debug.WriteLine("Şifre sıfırlama isteği algılandı, Application_BeginRequest atlanıyor.");
+                return;
+            }
+
+            // Cookie kontrolü
+            var authCookie = httpContext.Request.Cookies["AuthCookie"];
+            if (authCookie != null)
+            {
+                var cookieValue = authCookie.Value.Split('|');
+                var lastLoginTime = DateTime.Parse(cookieValue[1]);
+
+                System.Diagnostics.Debug.WriteLine("AuthCookie bulundu. Son giriş zamanı: " + lastLoginTime);
+
+                if (DateTime.Now - lastLoginTime > TimeSpan.FromMinutes(60))
+                {
+                    // Cookie süresi dolmuşsa
+                    httpContext.Response.Cookies["AuthCookie"].Expires = DateTime.Now.AddMinutes(-1);
+                    httpContext.Response.Cookies["AuthCookie"].Value = null;
+
+                    System.Diagnostics.Debug.WriteLine("Cookie süresi dolmuş ve silindi.");
+                    httpContext.Response.Redirect("/Account/Login", false);
+                    httpContext.ApplicationInstance.CompleteRequest();
+                }
+                else
+                {
+                    // Kullanıcı geçerli oturumla giriş yapmışsa
+                    if (!httpContext.Request.Url.AbsolutePath.Contains("/Dashboard/Index"))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Geçerli oturum ile Dashboard'a yönlendirme yapılıyor.");
+                        httpContext.Response.Redirect("/Dashboard/Index", false);
+                        httpContext.ApplicationInstance.CompleteRequest();
+                    }
+                }
+            }
+            else
+            {
+                // Cookie yoksa login sayfasına yönlendir
+                System.Diagnostics.Debug.WriteLine("AuthCookie bulunamadı, login sayfasına yönlendiriliyor.");
+                if (!httpContext.Request.Url.AbsolutePath.Contains("/Account/Login"))
+                {
+                    httpContext.Response.Redirect("/Account/Login", false);
+                    httpContext.ApplicationInstance.CompleteRequest();
+                }
             }
         }
+
+
+
+
+
+
+
 
 
     }
