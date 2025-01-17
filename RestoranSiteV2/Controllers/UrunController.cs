@@ -9,6 +9,7 @@ using RestoranSiteV2.Models.Siniflar;
 
 namespace RestoranSiteV2.Controllers
 {
+    [Authorize]
     public class UrunController : Controller
     {
         Context c = new Context();

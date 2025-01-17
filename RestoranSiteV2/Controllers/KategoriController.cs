@@ -13,6 +13,7 @@ namespace RestoranSiteV2.Controllers
     {
         // GET: Kategori
         Context c = new Context();
+        [Authorize]
         public ActionResult Index()
         {
             var degerler = c.Kategoris.ToList();

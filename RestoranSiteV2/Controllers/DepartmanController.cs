@@ -10,6 +10,7 @@ namespace RestoranSiteV2.Controllers
     {
         // GET: Departman
         Context c = new Context();
+        [Authorize]
         public ActionResult Index()
         {
             var degerler = c.Departmans.Where(x=>x.Durum==true).ToList();

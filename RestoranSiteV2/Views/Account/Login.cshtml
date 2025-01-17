@@ -1,4 +1,4 @@
-﻿@using RestoranSiteV2.Models.Siniflar
+﻿﻿@using RestoranSiteV2.Models.Siniflar
 @model Admin
 
 @{
@@ -73,7 +73,6 @@
     </div>
 
     <!-- Şifremi Unuttum Modal -->
-    <!-- Şifremi Unuttum Modal -->
     <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -104,73 +103,56 @@
                             <label for="newPassword" class="form-label">Yeni Şifre</label>
                             <input type="password" id="newPassword" class="form-control" placeholder="Yeni şifrenizi girin">
                         </div>
-                        <div class="mb-3">
-                            <label for="confirmPassword" class="form-label">Yeni Şifreyi Tekrar Girin</label>
-                            <input type="password" id="confirmPassword" class="form-control" placeholder="Yeni şifrenizi tekrar girin">
-                        </div>
                         <button type="submit" class="btn btn-success w-100">Şifreyi Güncelle</button>
-                        <div id="errorMessage" class="text-danger mt-3" style="display: none;">
-                            Şifreler uyuşmuyor. Lütfen tekrar deneyin.
-                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-    const forgotPasswordModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
-    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-    const resetPasswordForm = document.getElementById('resetPasswordForm');
-    const infoMessage = document.getElementById('infoMessage');
-    const errorMessage = document.getElementById('errorMessage'); // Error message element
+    document.addEventListener('DOMContentLoaded', function () {
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+        const infoMessage = document.getElementById('infoMessage');
 
-    // Şifremi unuttum linkine tıklanınca modal gösterilir
-    forgotPasswordLink.addEventListener('click', function (e) {
-        e.preventDefault();
-        forgotPasswordModal.show();
-    });
+        forgotPasswordLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            forgotPasswordModal.show();
+        });
 
-    // Şifremi unuttum formu submit işlemi
-    forgotPasswordForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
+        // Şifremi unuttum form işlemleri
+        forgotPasswordForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
 
-        fetch('@Url.Action("ForgotPassword", "Account")', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Doğrulama Kodu:', data.verificationCode); // Doğrulama kodunu konsola yazdır
-                forgotPasswordForm.style.display = 'none';
-                infoMessage.style.display = 'block';
-                resetPasswordForm.style.display = 'block';
-            } else {
-                alert('Kullanıcı adı bulunamadı.');
-            }
-        })
-        .catch(() => alert('Bir hata oluştu.'));
-    });
+            fetch('@Url.Action("ForgotPassword", "Account")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Doğrulama Kodu:', data.verificationCode);
+                    forgotPasswordForm.style.display = 'none';
+                    infoMessage.style.display = 'block';
+                    resetPasswordForm.style.display = 'block';
+                } else {
+                    alert('Kullanıcı adı bulunamadı.');
+                }
+            })
+            .catch(() => alert('Bir hata oluştu.'));
+        });
 
-    // Yeni şifre belirleme formu submit işlemi
-    resetPasswordForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const verificationCode = document.getElementById('verificationCode').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        // Şifrelerin uyuşup uyuşmadığını kontrol et
-        if (newPassword !== confirmPassword) {
-            errorMessage.style.display = 'block'; // Hata mesajını göster
-        } else {
-            errorMessage.style.display = 'none'; // Hata mesajını gizle
+        // Yeni şifre belirleme işlemleri
+        resetPasswordForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const verificationCode = document.getElementById('verificationCode').value;
+            const newPassword = document.getElementById('newPassword').value;
 
             fetch('@Url.Action("ResetPassword", "Account")', {
                 method: 'POST',
@@ -181,16 +163,38 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.success) {
                     alert('Şifreniz başarıyla güncellendi.');
-                    forgotPasswordModal.hide(); // Modalı kapat
+                    forgotPasswordModal.hide();
                 } else {
                     alert('Doğrulama kodu hatalı.');
                 }
             })
-            .catch(() => alert('Bir hata oluştu.'));
-        }
+            .catch(() => alertz('Bir hata oluştu.'));
+        });
     });
-});
-    </script>
 
+    forgotPasswordForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+
+    fetch('@Url.Action("ForgotPassword", "Account")', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Doğrulama Kodu:', data.verificationCode); // Doğrulama kodunu konsola yazdır
+            forgotPasswordForm.style.display = 'none';
+            infoMessage.style.display = 'block';
+            resetPasswordForm.style.display = 'block';
+        } else {
+            alert('Kullanıcı adı bulunamadı.');
+        }
+    })
+    .catch(() => alert('Bir hata oluştu.'));
+});
+
+    </script>
 </body>
 </html>

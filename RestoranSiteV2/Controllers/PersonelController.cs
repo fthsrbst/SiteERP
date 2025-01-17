@@ -10,6 +10,7 @@ namespace RestoranSiteV2.Controllers
     {
         Context c = new Context();
         // GET: Personel
+        [Authorize]
         public ActionResult Index()
         {
             ViewBag.Departmanlar = c.Departmans.ToList();

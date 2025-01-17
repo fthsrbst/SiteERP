@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using RestoranSiteV2.Models.Siniflar;
 
 namespace RestoranSiteV2.Controllers
@@ -24,71 +25,40 @@ namespace RestoranSiteV2.Controllers
             return View(model); // View'a gönder
         }
 
-        // Login Post (POST)
-        // Login Post (POST)
-        // Login Post (POST)
-        // Login Post (POST)
         [HttpPost]
         public ActionResult Login(Admin model)
         {
             if (ModelState.IsValid)
             {
+                // Kullanıcı adıyla veritabanından admin bilgilerini getir
                 var admin = _context.Admins.FirstOrDefault(a => a.KullaniciAd == model.KullaniciAd);
-                if (admin != null && VerifyPassword(model.Sifre, admin.Sifre)) // Hash doğrulaması
+
+                if (admin != null && VerifyPassword(model.Sifre, admin.Sifre)) // Şifre doğrulaması
                 {
-                    // Başarılı giriş, cookie oluşturuluyor
-                    var cookie = new HttpCookie("AuthCookie")
-                    {
-                        Value = $"{admin.KullaniciAd}|{DateTime.Now.ToString()}",
-                        Expires = DateTime.Now.AddHours(1), // 1 saatlik süre
-                        HttpOnly = true, // XSS saldırılarına karşı güvenlik
-                        Secure = Request.IsSecureConnection // Sadece HTTPS üzerinden gönderilmesini sağla
-                    };
-                    Response.Cookies.Add(cookie);
+                    // Kullanıcı oturumunu başlat
+                    FormsAuthentication.SetAuthCookie(admin.KullaniciAd, false);
 
-                    // Başarılı giriş kontrolü
-                    if (Request.Cookies["AuthCookie"] != null)
-                    {
-                        Console.WriteLine("Cookie oluşturuldu: " + Request.Cookies["AuthCookie"].Value);
-                    }
-
-                    // Dashboard'a yönlendir
+                    // Başarılı giriş, Dashboard'a yönlendir
                     return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {
-                    // Kullanıcı adı veya şifre yanlış, hata mesajı ekle
+                    // Kullanıcı adı veya şifre yanlışsa, hata mesajı ekle
                     ModelState.AddModelError(string.Empty, "Geçersiz kullanıcı adı veya şifre.");
                 }
             }
-            return View(model); // Hata varsa, giriş sayfasını tekrar göster
+
+            // Model geçersizse ya da hata varsa, giriş sayfasını tekrar göster
+            return View(model);
         }
-
-
 
 
         public ActionResult Logout()
         {
-            var authCookie = Request.Cookies["AuthCookie"];
-            if (authCookie != null)
-            {
-                authCookie.Expires = DateTime.Now.AddDays(-1); // Cookie'yi geçersiz kıl
-                authCookie.Value = null;                      // Değerini sıfırla
-                authCookie.Path = "/";
-                authCookie.HttpOnly = true;                   // Güvenlik için HttpOnly
-                authCookie.Secure = Request.IsSecureConnection; // HTTPS için Secure flag
-                Response.Cookies.Set(authCookie);
-
-                System.Diagnostics.Debug.WriteLine("Logout: Cookie başarıyla silindi.");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Logout: AuthCookie bulunamadı.");
-            }
-
-            // Kullanıcıyı login sayfasına yönlendir
+            FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Account");
         }
+
 
 
         // Şifre Unuttum Post (AJAX)

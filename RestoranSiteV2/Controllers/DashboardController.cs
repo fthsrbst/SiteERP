@@ -12,7 +12,7 @@ namespace RestoranSiteV2.Controllers
     public class DashboardController : Controller
     {
         private readonly Context db = new Context();
-
+        [Authorize]
         public ActionResult Index()
         {
             // Toplam değerler
@@ -72,58 +72,57 @@ namespace RestoranSiteV2.Controllers
 
             // 1. En Çok Satılan Ürün
             var mostSoldProduct = db.SatisHarekets
-                                    .GroupBy(s => s.Urunid)
-                                    .Select(g => new
-                                    {
-                                        UrunId = g.Key,
-                                        TotalSold = g.Sum(s => s.Adet)
-                                    })
-                                    .OrderByDescending(x => x.TotalSold)
-                                    .FirstOrDefault();
+                .GroupBy(s => s.Urunid)
+                .Select(g => new
+                {
+                    UrunId = g.Key,
+                    TotalSold = g.Sum(s => s.Adet)
+                })
+                .OrderByDescending(x => x.TotalSold)
+                .FirstOrDefault();
 
             var mostSoldProductDetails = mostSoldProduct != null ? db.Uruns
-                                                        .Where(u => u.Urunid == mostSoldProduct.UrunId)
-                                                        .Select(u => new
-                                                        {
-                                                            u.UrunAd,
-                                                            TotalSold = mostSoldProduct.TotalSold
-                                                        })
-                                                        .FirstOrDefault() : null;
+                .Where(u => u.Urunid == mostSoldProduct.UrunId)
+                .Select(u => new
+                {
+                    u.UrunAd,
+                    TotalSold = mostSoldProduct.TotalSold
+                })
+                .FirstOrDefault() : null;
 
-            // 2. En Az Satılan Ürün
             var leastSoldProduct = db.SatisHarekets
-                                     .GroupBy(s => s.Urunid)
-                                     .Select(g => new
-                                     {
-                                         UrunId = g.Key,
-                                         TotalSold = g.Sum(s => s.Adet)
-                                     })
-                                     .OrderBy(x => x.TotalSold)
-                                     .FirstOrDefault();
+                .GroupBy(s => s.Urunid)
+                .Select(g => new
+                {
+                    UrunId = g.Key,
+                    TotalSold = g.Sum(s => s.Adet)
+                })
+                .OrderBy(x => x.TotalSold)
+                .FirstOrDefault();
 
             var leastSoldProductDetails = leastSoldProduct != null ? db.Uruns
-                                                            .Where(u => u.Urunid == leastSoldProduct.UrunId)
-                                                            .Select(u => new
-                                                            {
-                                                                u.UrunAd,
-                                                                TotalSold = leastSoldProduct.TotalSold
-                                                            })
-                                                            .FirstOrDefault() : null;
+                .Where(u => u.Urunid == leastSoldProduct.UrunId)
+                .Select(u => new
+                {
+                    u.UrunAd,
+                    TotalSold = leastSoldProduct.TotalSold
+                })
+                .FirstOrDefault() : null;
 
-            // 3. En Az Stoğa Sahip Ürün
+            // En Az Stoğa Sahip Ürün
             var leastStockProduct = db.Uruns
-                                      .OrderBy(u => u.Stok)
-                                      .FirstOrDefault();
+                .OrderBy(u => u.Stok)
+                .FirstOrDefault();
 
             // Verileri ViewBag'e aktar
-            ViewBag.MostSoldProductName = mostSoldProductDetails?.UrunAd;
-            ViewBag.MostSoldQuantity = mostSoldProductDetails?.TotalSold;
+            ViewBag.MostSoldProductName = mostSoldProductDetails?.UrunAd ?? "Veri Yok";
+            ViewBag.MostSoldQuantity = mostSoldProductDetails?.TotalSold ?? 0;
 
-            ViewBag.LeastSoldProductName = leastSoldProductDetails?.UrunAd;
-            ViewBag.LeastSoldQuantity = leastSoldProductDetails?.TotalSold;
+            ViewBag.LeastSoldProductName = leastSoldProductDetails?.UrunAd ?? "Veri Yok";
+            ViewBag.LeastSoldQuantity = leastSoldProductDetails?.TotalSold ?? 0;
 
-            ViewBag.LeastStockProductName = leastStockProduct?.UrunAd;
-            ViewBag.LeastStockQuantity = leastStockProduct?.Stok;
+            ViewBag.LeastStockProductName = leastStockProduct?.UrunAd ?? "Veri Yok";
+            ViewBag.LeastStockQuantity = leastStockProduct?.Stok ?? 0;
 
             // Ürün verilerini JSON formatında aktar
             ViewBag.Urunler = db.Uruns.Where(x => x.Durum == true).Select(u => new
